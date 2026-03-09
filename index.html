@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P3 Homepage — Hybrid Mockup (B+C)</title>
+<!--
+  ========================================================================
+  WEBFLOW IMPLEMENTATION GUIDE
+  ========================================================================
+  This mockup is designed for easy translation into Webflow. Key notes:
+
+  FONTS: Add "Inter" and "Space Grotesk" via Webflow's Google Fonts panel.
+
+  STRUCTURE: Each <section> maps to a Webflow Section element.
+    - Inner containers → Webflow Container (max-width 1100-1240px)
+    - Grid layouts → Webflow Grid component
+    - Class names are BEM-like and can be used directly as Webflow classes
+
+  CUSTOM CODE NEEDED (paste in Project Settings > Custom Code):
+    1. ROI Calculator JS → <script> at end of this file (Footer Code area)
+    2. Nav scroll behavior → small scroll listener script
+    3. CSS custom properties → paste :root block in Custom Code <head>
+
+  IMAGES: Upload p3-hero-bg.mp4, iphone-mockup-v2.png, 5.png, 6.png,
+          group.jpeg, and p3-logo-horizontal.png to Webflow Assets.
+
+  VIDEO: Use Webflow Background Video element for the hero section.
+         Upload p3-hero-bg.mp4 as the background video source.
+
+  INTERACTIONS: Hover effects can use Webflow Interactions 2.0.
+    - Card hovers (translateY, box-shadow) → Element Trigger: Hover
+    - Hero glow animation → Webflow "While page is scrolling" or Loop
+
+  RESPONSIVE: Three breakpoints already defined (tablet ≤900, mobile ≤600,
+              small ≤400). Map these to Webflow's tablet/mobile breakpoints.
+  ========================================================================
+-->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', -apple-system, sans-serif; color: #1a1a1a; background: #fff; line-height: 1.6; overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+
+:root {
+  --crimson: #D93A3A;
+  --crimson-dark: #B82E2E;
+  --maroon: #4A1020;
+  --warm-gray: #FAF7F4;
+  --warm-gray-2: #F0EBE5;
+  --dark: #111;
+  --light-text: #666;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.06);
+  --shadow-hover: 0 16px 48px rgba(217,58,58,0.12);
+  --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mockup-badge {
+  position: fixed; top: 16px; right: 16px; z-index: 9999;
+  background: linear-gradient(135deg, var(--crimson), var(--maroon)); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px;
+  letter-spacing: 1px; text-transform: uppercase;
+  box-shadow: 0 2px 12px rgba(74,16,32,0.4);
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(74,16,32,0.6); backdrop-filter: blur(12px);
+  padding: 0 48px; height: 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+nav.scrolled { background: rgba(0,0,0,0.92); backdrop-filter: blur(20px); box-shadow: 0 2px 20px rgba(0,0,0,0.2); }
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo img { height: 36px; width: auto; display: block; max-width: none; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); transition: color var(--transition); }
+.nav-links a:hover { color: #fff; }
+.nav-cta {
+  background: var(--crimson); color: #fff !important; padding: 10px 24px;
+  border-radius: 50px; font-weight: 600; font-size: 14px;
+  transition: all var(--transition);
+}
+.nav-cta:hover { background: #fff; color: var(--crimson) !important; }
+
+/* ===== HERO — HTML5 Background Video ===== */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a0510 0%, var(--maroon) 35%, #2a0a14 60%, #140510 100%);
+}
+/* HTML5 video background */
+.hero-video-bg {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+}
+.hero-video-bg video {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: auto; height: auto;
+  min-width: 100%; min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  pointer-events: none;
+}
+/* Dark overlay on top of video */
+.hero-video-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(26,5,16,0.82) 0%,
+    rgba(74,16,32,0.72) 35%,
+    rgba(42,10,20,0.78) 60%,
+    rgba(20,5,16,0.85) 100%
+  );
+}
+/* Subtle animated glow on top of video (adds depth) */
+.hero::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(217,58,58,0.08), transparent),
+    radial-gradient(ellipse 50% 60% at 80% 30%, rgba(74,16,32,0.12), transparent),
+    radial-gradient(ellipse 40% 40% at 60% 80%, rgba(217,58,58,0.06), transparent);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes heroGlow {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+  max-width: 1240px; width: 100%;
+  padding: 140px 48px 100px;
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(36px, 5vw, 62px); font-weight: 700;
+  line-height: 1.06; color: #fff; margin-bottom: 24px;
+}
+.hero h1 .highlight {
+  background: linear-gradient(90deg, var(--crimson), #ff6b6b);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-text p { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 480px; margin-bottom: 36px; line-height: 1.7; }
+.hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+.btn-primary {
+  background: var(--crimson); color: #fff; padding: 15px 32px;
+  border-radius: 50px; font-weight: 600; font-size: 15px;
+  transition: all var(--transition); display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: #fff; color: var(--crimson); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.btn-ghost {
+  background: rgba(255,255,255,0.1); color: #fff; padding: 15px 32px;
+  border-radius: 50px; font-weight: 600; font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.3); transition: all var(--transition);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
+.hero-social-proof { display: flex; align-items: center; gap: 16px; }
+.avatar-stack { display: flex; }
+.avatar-stack .av {
+  width: 36px; height: 36px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2);
+  margin-left: -10px; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+.avatar-stack .av:first-child { margin-left: 0; }
+.av-1{background:var(--crimson)}.av-2{background:var(--maroon)}.av-3{background:#E67E22}.av-4{background:#2C3E50}.av-5{background:#27AE60;font-size:10px!important}
+.proof-text { font-size: 13px; color: rgba(255,255,255,0.6); }
+.proof-text strong { color: #fff; }
+
+/* Hero iPhone — PROMINENT */
+.hero-visual {
+  position: relative; display: flex; justify-content: center; align-items: center;
+}
+.hero-iphone {
+  width: 380px; filter: drop-shadow(0 40px 80px rgba(0,0,0,0.5));
+  position: relative; z-index: 2;
+  transform: perspective(800px) rotateY(-3deg);
+  transition: transform 0.5s ease;
+}
+.hero-iphone:hover { transform: perspective(800px) rotateY(0deg) scale(1.02); }
+.hero-visual::before {
+  content: ''; position: absolute; width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(217,58,58,0.25), transparent 70%);
+  border-radius: 50%; z-index: 1; filter: blur(40px);
+}
+
+.scroll-indicator {
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: rgba(255,255,255,0.35); font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  animation: bobble 2s infinite;
+}
+@keyframes bobble { 0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)} }
+
+/* ===== PARTNER LOGOS — Styled text logos ===== */
+.partner-logos { padding: 44px 48px 36px; background: #fff; text-align: center; }
+.partner-logos .label { font-size: 11px; font-weight: 700; color: #bbb; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px; }
+.logo-grid {
+  display: flex; align-items: center; justify-content: center; gap: 24px 40px; flex-wrap: wrap;
+  max-width: 1100px; margin: 0 auto;
+}
+.logo-styled {
+  font-weight: 700; color: #222;
+  opacity: 0.35; transition: all 0.4s ease;
+  white-space: nowrap; line-height: 1;
+  cursor: default;
+}
+.logo-styled:hover { opacity: 0.8; }
+/* Individual logo styles */
+.logo-styled.google { font-family: 'Product Sans', 'Inter', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
+.logo-styled.google:hover { color: #4285F4; }
+.logo-styled.nyu { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+.logo-styled.nyu:hover { color: #57068C; }
+.logo-styled.obama { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.logo-styled.obama:hover { color: #1a1a1a; opacity: 1; }
+.logo-styled.cps { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
+.logo-styled.cps:hover { color: #003366; }
+.logo-styled.lsu { font-size: 22px; font-weight: 800; letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif; }
+.logo-styled.lsu:hover { color: #461D7C; }
+.logo-styled.umich { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; }
+.logo-styled.umich:hover { color: #00274C; }
+.logo-styled.utaustin { font-family: Georgia, serif; font-size: 14px; font-weight: 700; }
+.logo-styled.utaustin:hover { color: #BF5700; }
+.logo-styled.xavier { font-size: 13px; font-weight: 700; letter-spacing: 0.3px; }
+.logo-styled.xavier:hover { color: #006747; }
+.logo-styled.lurie { font-size: 13px; font-weight: 700; }
+.logo-styled.lurie:hover { color: #0073CF; }
+.logo-styled.gilead { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+.logo-styled.gilead:hover { color: #003399; }
+.logo-styled.threea { font-size: 16px; font-weight: 800; letter-spacing: -0.5px; }
+.logo-styled.threea:hover { color: var(--crimson); }
+.logo-styled.csu { font-size: 13px; font-weight: 700; }
+.logo-styled.csu:hover { color: #006633; }
+.logo-styled.langston { font-size: 13px; font-weight: 700; }
+.logo-styled.langston:hover { color: #F37021; }
+.logo-styled.unt { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+.logo-styled.unt:hover { color: #00853E; }
+.logo-styled.blackmen { font-size: 13px; font-weight: 700; }
+.logo-styled.build { font-size: 18px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+.logo-styled.build:hover { color: #E31937; }
+.logo-styled.mbk { font-size: 13px; font-weight: 700; }
+.logo-styled.champs { font-size: 13px; font-weight: 700; }
+.logo-styled.hood { font-size: 13px; font-weight: 700; }
+/* Divider dot between logos */
+.logo-dot { width: 4px; height: 4px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+
+/* ===== SHARED SECTION STYLES ===== */
+.section-tag {
+  display: inline-block; padding: 6px 16px; border-radius: 50px;
+  font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;
+}
+.tag-crimson { background: rgba(217,58,58,0.08); color: var(--crimson); }
+.tag-light { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+.tag-maroon { background: rgba(255,255,255,0.1); color: #fff; }
+.section-header { text-align: center; margin-bottom: 40px; }
+.section-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 3.5vw, 44px); font-weight: 700; max-width: 600px; margin: 0 auto;
+}
+.section-header p { font-size: 16px; max-width: 560px; margin: 12px auto 0; line-height: 1.7; }
+
+/* ===== WHY NOW ===== */
+.why-now {
+  padding: 80px 48px 72px;
+  background: var(--dark); color: #fff;
+  position: relative; overflow: hidden;
+}
+.why-now::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(217,58,58,0.08), transparent 70%);
+}
+.why-now-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+.why-now h2 { color: #fff; }
+.gaps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+.gap-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 32px;
+  transition: all var(--transition);
+}
+.gap-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(217,58,58,0.3); transform: translateY(-4px); }
+.gap-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(217,58,58,0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
+.gap-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+.gap-card p { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+.stats-bar {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+  background: rgba(217,58,58,0.08); border: 1px solid rgba(217,58,58,0.15);
+  border-radius: var(--radius-lg); padding: 32px 24px;
+}
+.stat-item { text-align: center; }
+.stat-num { font-family: 'Space Grotesk'; font-size: clamp(26px, 2.8vw, 36px); font-weight: 700; color: var(--crimson); line-height: 1; }
+.stat-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 6px; line-height: 1.4; }
+
+/* ===== WORKFORCE OUTCOME OS ===== */
+.workforce-os { padding: 72px 48px 64px; background: #fff; }
+.workforce-os .section-header h2 { color: var(--dark); }
+.workforce-os .section-header p { color: var(--light-text); }
+.os-columns {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  max-width: 1100px; margin: 0 auto;
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.os-col {
+  padding: 36px 28px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  position: relative; transition: all var(--transition);
+}
+.os-col:not(:last-child)::after {
+  content: ''; position: absolute; right: 0; top: 15%; bottom: 15%;
+  width: 1px; background: rgba(255,255,255,0.1);
+}
+.os-col:nth-child(1) { background: var(--crimson); color: #fff; }
+.os-col:nth-child(2) { background: var(--maroon); color: #fff; }
+.os-col:nth-child(3) { background: #1a0a10; color: #fff; }
+.os-col:nth-child(4) { background: var(--dark); color: #fff; }
+.os-col:hover { transform: translateY(-4px); z-index: 1; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+.os-col-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+}
+.os-col h3 { font-family: 'Space Grotesk'; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+.os-col p { font-size: 13px; line-height: 1.6; opacity: 0.75; margin-bottom: 20px; }
+.os-col-features { list-style: none; padding: 0; width: 100%; }
+.os-col-features li {
+  font-size: 12px; font-weight: 500; padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,0.1); opacity: 0.7;
+}
+.os-col-features li:first-child { border-top: none; }
+
+/* ===== DASHBOARD PREVIEW — Real P3 Outcome Data ===== */
+.dashboard-preview { padding: 72px 48px 64px; background: var(--maroon); color: #fff; }
+.dashboard-inner {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start;
+  max-width: 1100px; margin: 0 auto;
+}
+.dashboard-preview h2 {
+  font-family: 'Space Grotesk'; font-size: clamp(28px, 3.5vw, 40px); font-weight: 700; margin-bottom: 16px;
+}
+.dashboard-inner > div > p { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; line-height: 1.7; }
+.dashboard-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.dash-feat {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.08); padding: 12px 16px; border-radius: var(--radius);
+  font-size: 13px; font-weight: 500;
+}
+.dash-feat .icon { width: 28px; height: 28px; border-radius: 7px; background: rgba(217,58,58,0.3); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.btn-light {
+  background: #fff; color: var(--maroon); padding: 12px 28px;
+  border-radius: 50px; font-weight: 600; font-size: 14px;
+  transition: all var(--transition); display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-light:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+.dashboard-visual {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg); padding: 20px; overflow: hidden;
+}
+.dash-topbar {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.dash-dot { width: 9px; height: 9px; border-radius: 50%; }
+.dash-dot:nth-child(1){background:#ff5f57}.dash-dot:nth-child(2){background:#ffbd2e}.dash-dot:nth-child(3){background:#28c940}
+.dash-url { margin-left: 12px; background: rgba(255,255,255,0.06); padding: 5px 14px; border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.4); flex: 1; }
+.dash-nav-tabs {
+  display: flex; gap: 0; margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.dash-tab {
+  padding: 7px 12px; font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,0.35); cursor: default;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.dash-tab.active { color: var(--crimson); border-bottom-color: var(--crimson); }
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dash-widget {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 14px;
+}
+.widget-label { font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.widget-value { font-family: 'Space Grotesk'; font-size: 22px; font-weight: 700; color: var(--crimson); }
+.widget-trend { font-size: 10px; color: #28c940; margin-top: 2px; }
+.dash-chart {
+  grid-column: 1 / -1;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 14px; height: 110px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 65px; }
+.chart-bar { flex: 1; border-radius: 3px 3px 0 0; min-width: 8px; }
+.chart-bar.enrolled { background: rgba(217,58,58,0.25); }
+.chart-bar.retained { background: var(--crimson); }
+
+/* Outcome milestones section */
+.dash-outcomes-section {
+  grid-column: 1 / -1;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 14px;
+}
+.outcomes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.outcomes-header .widget-label { margin-bottom: 0; }
+.outcome-period {
+  font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+  color: var(--crimson); background: rgba(217,58,58,0.15);
+}
+.milestone-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.milestone-card {
+  background: rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; text-align: center;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.milestone-icon { font-size: 18px; margin-bottom: 6px; }
+.milestone-val { font-family: 'Space Grotesk'; font-size: 20px; font-weight: 700; color: #fff; }
+.milestone-label { font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.milestone-trend { font-size: 9px; color: #28c940; margin-top: 2px; }
+
+/* Pipeline funnel */
+.dash-funnel {
+  grid-column: 1 / -1;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 14px;
+}
+.funnel-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+}
+.funnel-row:last-child { margin-bottom: 0; }
+.funnel-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; width: 100px; text-align: right; flex-shrink: 0; }
+.funnel-bar-wrap { flex: 1; height: 18px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+.funnel-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+.funnel-bar span { font-size: 9px; font-weight: 700; color: #fff; }
+.funnel-bar.f1 { background: var(--crimson); }
+.funnel-bar.f2 { background: rgba(217,58,58,0.7); }
+.funnel-bar.f3 { background: rgba(217,58,58,0.5); }
+.funnel-bar.f4 { background: rgba(217,58,58,0.35); }
+
+/* ===== ROI CALCULATOR — Tighter + Additional selectors ===== */
+.roi-calculator { padding: 48px 48px 44px; background: var(--warm-gray); }
+.roi-inner { max-width: 1000px; margin: 0 auto; }
+.roi-calculator .section-header { margin-bottom: 22px; }
+.roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+.roi-inputs {
+  background: #fff; border-radius: var(--radius-xl); padding: 28px;
+  box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+}
+.roi-inputs h3 { font-family: 'Space Grotesk'; font-size: 17px; font-weight: 700; margin-bottom: 16px; color: var(--dark); }
+.input-group { margin-bottom: 14px; }
+.input-group:last-child { margin-bottom: 0; }
+.input-group label { display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 5px; }
+.input-group .sublabel { font-size: 11px; color: var(--light-text); margin-bottom: 5px; }
+.input-group select {
+  width: 100%; padding: 10px 14px; border-radius: 10px; border: 2px solid #e0e0e0;
+  font-size: 13px; font-weight: 500; background: #fff; color: var(--dark);
+  cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  transition: border-color var(--transition);
+}
+.input-group select:focus { outline: none; border-color: var(--crimson); }
+.slider-wrap input[type="range"] {
+  -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px;
+  background: #ddd; outline: none; margin: 6px 0;
+}
+.slider-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--crimson); cursor: pointer; box-shadow: 0 2px 8px rgba(217,58,58,0.3);
+}
+.slider-value { text-align: right; font-family: 'Space Grotesk'; font-size: 16px; font-weight: 700; color: var(--crimson); margin-top: 2px; }
+.tier-toggle { display: flex; gap: 6px; }
+.tier-btn {
+  flex: 1; padding: 10px 12px; border-radius: 10px; text-align: center;
+  cursor: pointer; transition: all var(--transition);
+  border: 2px solid #e0e0e0; background: #fff;
+}
+.tier-btn.active { border-color: var(--crimson); background: rgba(217,58,58,0.04); }
+.tier-btn .tier-name { font-size: 13px; font-weight: 700; color: var(--dark); }
+.tier-btn .tier-price { font-size: 11px; color: var(--crimson); font-weight: 600; margin-top: 2px; }
+.tier-btn .tier-desc { font-size: 10px; color: var(--light-text); margin-top: 2px; }
+
+.roi-results {
+  background: linear-gradient(135deg, var(--maroon), #2a0a14);
+  border-radius: var(--radius-xl); padding: 28px; color: #fff;
+  display: flex; flex-direction: column;
+}
+.roi-results h3 { font-family: 'Space Grotesk'; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.roi-results .roi-subtitle { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+.roi-metric { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.roi-metric:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.roi-metric .metric-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.roi-metric .metric-value { font-family: 'Space Grotesk'; font-size: 26px; font-weight: 700; color: var(--crimson); }
+.roi-metric .metric-detail { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.roi-highlight {
+  background: rgba(217,58,58,0.15); border: 1px solid rgba(217,58,58,0.3);
+  border-radius: var(--radius); padding: 14px; margin-top: auto; text-align: center;
+}
+.roi-highlight .big-num { font-family: 'Space Grotesk'; font-size: 36px; font-weight: 700; color: #fff; }
+.roi-highlight .big-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.btn-cta-calc {
+  display: block; width: 100%; text-align: center; margin-top: 12px;
+  background: var(--crimson); color: #fff; padding: 12px;
+  border-radius: 50px; font-weight: 600; font-size: 13px;
+  transition: all var(--transition);
+}
+.btn-cta-calc:hover { background: #fff; color: var(--crimson); }
+
+/* ===== PRESS — Bigger logos, two rows ===== */
+.social-proof {
+  padding: 52px 48px 48px; text-align: center;
+  position: relative; overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(250,247,244,0.80) 50%, rgba(255,255,255,0.82) 100%),
+    url('group.jpeg') center/cover no-repeat;
+}
+.social-proof > * { position: relative; z-index: 1; }
+.social-proof h2 {
+  font-family: 'Space Grotesk'; font-size: clamp(28px, 3.5vw, 44px); font-weight: 700;
+  color: var(--dark); max-width: 700px; margin: 0 auto 28px; white-space: nowrap;
+}
+.press-logos-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  max-width: 700px; margin: 0 auto 36px;
+}
+.press-card-v2 {
+  background: var(--warm-gray); border-radius: var(--radius); padding: 24px 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  transition: all var(--transition); border: 1px solid transparent;
+}
+.press-card-v2:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: rgba(217,58,58,0.1); }
+.press-card-v2 .pc-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px; font-weight: 700; color: var(--dark);
+  letter-spacing: -0.5px; line-height: 1.1;
+}
+.press-card-v2 .pc-type { font-size: 10px; color: var(--light-text); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+/* Special styles per outlet */
+.press-card-v2.nyt .pc-logo { font-family: Georgia, 'Times New Roman', serif; font-size: 20px; font-style: italic; letter-spacing: 0; }
+.press-card-v2.abc .pc-logo { font-weight: 900; letter-spacing: 2px; }
+.press-card-v2.today .pc-logo { color: var(--crimson); font-weight: 800; }
+.press-card-v2.versus .pc-logo { letter-spacing: 4px; text-transform: uppercase; font-size: 18px; }
+.press-card-v2.adweek .pc-logo { font-weight: 800; }
+.press-card-v2.sixdeg .pc-logo { font-size: 18px; }
+
+.quote-block {
+  max-width: 700px; margin: 0 auto;
+  padding: 40px; background: var(--warm-gray); border-radius: var(--radius-xl);
+  position: relative;
+}
+.quote-block::before { content: '\201C'; position: absolute; top: 8px; left: 20px; font-size: 72px; color: rgba(217,58,58,0.1); font-family: Georgia, serif; line-height: 1; }
+.quote-block blockquote { font-size: 18px; color: var(--dark); line-height: 1.7; font-style: italic; margin-bottom: 16px; padding-left: 12px; }
+.quote-block cite { font-size: 13px; color: var(--light-text); font-style: normal; font-weight: 600; }
+
+/* ===== DUAL CTA — Enhanced ===== */
+.dual-cta { padding: 64px 48px; background: var(--warm-gray-2); }
+.dual-cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; }
+.dual-cta-card {
+  border-radius: var(--radius-xl); padding: 48px 40px;
+  display: flex; flex-direction: column; justify-content: flex-end; min-height: 400px;
+  position: relative; overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.dual-cta-card:hover { transform: translateY(-4px); box-shadow: 0 24px 64px rgba(0,0,0,0.15); }
+/* Decorative background shapes */
+.dual-cta-card::before {
+  content: ''; position: absolute; top: -30%; right: -20%;
+  width: 300px; height: 300px; border-radius: 50%;
+  opacity: 0.08; pointer-events: none;
+  transition: transform 0.6s ease;
+}
+.dual-cta-card:hover::before { transform: scale(1.15); }
+.dual-cta-card::after {
+  content: ''; position: absolute; bottom: -20%; left: -15%;
+  width: 200px; height: 200px; border-radius: 50%;
+  opacity: 0.05; pointer-events: none;
+}
+.dual-cta-card.students {
+  background:
+    linear-gradient(135deg, rgba(217,58,58,0.72) 0%, rgba(232,84,84,0.68) 50%, rgba(255,123,123,0.70) 100%),
+    url('5.png') center/cover no-repeat;
+  color: #fff;
+}
+.dual-cta-card.students::before { background: #fff; }
+.dual-cta-card.students::after { background: #fff; }
+.dual-cta-card.partners {
+  background:
+    linear-gradient(135deg, rgba(10,10,10,0.72) 0%, rgba(26,26,46,0.68) 50%, rgba(22,33,62,0.70) 100%),
+    url('6.png') center/cover no-repeat;
+  color: #fff;
+}
+.dual-cta-card.partners::before { background: var(--crimson); opacity: 0.12; }
+.dual-cta-card.partners::after { background: #4a90d9; }
+.card-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 14px; }
+.dual-cta-card h3 { font-family: 'Space Grotesk'; font-size: 30px; font-weight: 700; line-height: 1.12; margin-bottom: 14px; }
+.dual-cta-card p { font-size: 15px; opacity: 0.85; margin-bottom: 28px; line-height: 1.7; max-width: 400px; }
+/* Feature mini-list */
+.dual-cta-features {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+}
+.dual-cta-features span {
+  font-size: 12px; font-weight: 600; padding: 5px 12px;
+  border-radius: 20px; background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px); letter-spacing: 0.3px;
+}
+.btn-white {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--dark); padding: 14px 28px;
+  border-radius: 50px; font-weight: 600; font-size: 14px;
+  transition: all var(--transition); width: fit-content;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+.dual-cta-card.students .btn-white { color: var(--crimson); }
+
+/* ===== FOOTER ===== */
+footer { padding: 56px 48px 28px; background: #0a0a0a; color: rgba(255,255,255,0.5); }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; max-width: 1100px; margin: 0 auto 40px; }
+.footer-brand .footer-logo { height: 28px; width: auto; max-width: none; margin-bottom: 12px; filter: brightness(0) invert(1); opacity: 0.8; }
+.footer-brand p { font-size: 13px; line-height: 1.7; max-width: 280px; }
+.footer-col h4 { color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+.footer-col a { display: block; font-size: 13px; padding: 3px 0; transition: color var(--transition); }
+.footer-col a:hover { color: var(--crimson); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; text-align: center; font-size: 12px; max-width: 1100px; margin: 0 auto; }
+
+/* ===== RESPONSIVE — Tablet (≤900px) ===== */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+
+  /* Hero */
+  .hero { min-height: 90vh; }
+  .hero-inner { grid-template-columns: 1fr; padding: 120px 24px 80px; text-align: center; }
+  .hero-text p { margin-left: auto; margin-right: auto; }
+  .hero-buttons { justify-content: center; }
+  .hero-social-proof { justify-content: center; }
+  .hero-visual { display: none; }
+
+  /* Partner logos */
+  .partner-logos { padding: 36px 24px 32px; }
+  .logo-grid { gap: 24px 32px; }
+  .logo-styled { font-size: 12px; }
+  .logo-dot { width: 3px; height: 3px; }
+
+  /* Why Now */
+  .gaps-grid { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+
+  /* Workforce OS */
+  .os-columns { grid-template-columns: 1fr 1fr; }
+  .os-col:not(:last-child)::after { display: none; }
+
+  /* Dashboard */
+  .dashboard-inner { grid-template-columns: 1fr; }
+  .milestone-grid { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* ROI */
+  .roi-calculator { padding: 40px 24px 36px; }
+  .roi-grid { grid-template-columns: 1fr; }
+
+  /* Press */
+  .social-proof { padding: 44px 24px 40px; }
+  .press-logos-grid { grid-template-columns: 1fr 1fr; }
+  .quote-block { padding: 28px; }
+
+  /* Dual CTA */
+  .dual-cta { padding: 48px 24px; }
+  .dual-cta-grid { grid-template-columns: 1fr; }
+  .dual-cta-card { min-height: 340px; }
+
+  /* Footer */
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  footer { padding: 40px 24px 24px; }
+}
+
+/* ===== RESPONSIVE — Mobile (≤600px) ===== */
+@media (max-width: 600px) {
+  .mockup-badge { font-size: 9px; padding: 4px 10px; top: 10px; right: 10px; }
+
+  /* Nav */
+  nav { height: 64px; padding: 0 16px; }
+  .nav-logo img { height: 28px; width: auto; display: block; }
+
+  /* Hero */
+  .hero { min-height: 85vh; }
+  .hero-inner { padding: 100px 20px 60px; gap: 24px; }
+  .hero h1 { font-size: 32px; line-height: 1.1; }
+  .hero-text p { font-size: 15px; margin-bottom: 28px; }
+  .hero-buttons { flex-direction: column; align-items: center; gap: 10px; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; padding: 14px 24px; font-size: 14px; }
+  .hero-social-proof { flex-direction: column; gap: 8px; text-align: center; }
+  .scroll-indicator { bottom: 16px; }
+
+  /* Partner logos */
+  .partner-logos { padding: 28px 16px 24px; }
+  .partner-logos .label { font-size: 10px; margin-bottom: 20px; }
+  .logo-grid { gap: 16px 24px; }
+  .logo-styled { font-size: 11px !important; }
+  .logo-styled.nyu, .logo-styled.lsu, .logo-styled.unt { font-size: 16px !important; }
+  .logo-dot { display: none; }
+
+  /* Section headers */
+  .section-header h2, .social-proof h2 { font-size: 26px; }
+  .section-header p { font-size: 14px; }
+
+  /* Sections global padding */
+  .workforce-os { padding: 48px 20px 40px; }
+  .dashboard-preview { padding: 48px 20px 40px; }
+
+  /* Why Now */
+  .why-now { padding: 48px 20px; }
+  .gap-card { padding: 28px 20px; }
+  .stats-bar { grid-template-columns: 1fr; gap: 0; }
+  .stat-item { padding: 16px 0; }
+
+  /* Workforce OS */
+  .os-columns { grid-template-columns: 1fr; gap: 16px; }
+  .os-col { padding: 24px 20px; }
+
+  /* Dashboard */
+  .milestone-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .milestone-card { padding: 16px 12px; }
+  .milestone-val { font-size: 22px; }
+  .funnel-label { font-size: 11px; min-width: 65px; }
+
+  /* ROI */
+  .roi-calculator { padding: 36px 20px 32px; }
+  .roi-inputs { padding: 24px 20px; }
+  .roi-output { padding: 24px 20px; }
+  .roi-headline { font-size: 36px; }
+
+  /* Press */
+  .social-proof { padding: 40px 20px 36px; }
+  .press-logos-grid { grid-template-columns: 1fr; gap: 12px; max-width: 400px; }
+  .press-card-v2 { padding: 20px 16px; }
+  .quote-block { padding: 24px 20px; }
+  .quote-block blockquote { font-size: 15px; }
+
+  /* Dual CTA */
+  .dual-cta { padding: 36px 16px; }
+  .dual-cta-card { min-height: auto; padding: 36px 24px; }
+  .dual-cta-icon { font-size: 36px; margin-bottom: 14px; }
+  .dual-cta-card h3 { font-size: 24px; }
+  .dual-cta-card p { font-size: 14px; }
+  .dual-cta-features span { font-size: 11px; padding: 4px 10px; }
+
+  /* Footer */
+  footer { padding: 36px 20px 20px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .footer-brand p { max-width: 100%; }
+  .footer-brand .footer-logo { height: 24px; }
+  .nav-logo img { height: 28px; width: auto; max-width: none; display: block; }
+}
+
+/* ===== RESPONSIVE — Small phones (≤400px) ===== */
+@media (max-width: 400px) {
+  .hero h1 { font-size: 27px; }
+  .hero-inner { padding: 90px 16px 50px; }
+  .milestone-grid { grid-template-columns: 1fr; }
+  .logo-grid { gap: 14px 20px; }
+  .logo-styled { font-size: 10px !important; }
+  .dual-cta-card { padding: 28px 20px; }
+  .roi-headline { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- ===== NAV ===== -->
+<!-- WEBFLOW: Navbar element, fixed position. Logo = Image element. Links = Nav Menu. -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">
+    <img src="p3-logo-horizontal.png" alt="Pulse of Perseverance Project">
+  </a>
+  <div class="nav-links">
+    <a href="#">For Students</a>
+    <a href="#">For Institutions</a>
+    <a href="#">For Mentors</a>
+    <a href="#">About</a>
+    <a href="#" class="nav-cta">Get the App</a>
+  </div>
+</nav>
+
+<!-- ===== HERO — Background Video ===== -->
+<!-- WEBFLOW: Section with Background Video element. Use hero-inner as Grid (2 col). -->
+<section class="hero">
+  <!-- Background video — P3 Impact Film (local .mp4) -->
+  <div class="hero-video-bg">
+    <video autoplay muted loop playsinline>
+      <source src="p3-hero-bg.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-video-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>The career accelerator for the <span class="highlight">next generation</span></h1>
+      <p>P3 connects underserved students with industry mentors, scholarships, and professional networks — powered by AI, driven by community.</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Free App
+        </a>
+        <a href="https://www.youtube.com/watch?v=dMCZt1bIlzk" target="_blank" class="btn-ghost">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Watch Impact Film
+        </a>
+      </div>
+      <div class="hero-social-proof">
+        <div class="avatar-stack">
+          <div class="av av-1">AJ</div>
+          <div class="av av-2">RD</div>
+          <div class="av av-3">KT</div>
+          <div class="av av-4">ML</div>
+          <div class="av av-5">+897</div>
+        </div>
+        <div class="proof-text"><strong>900+ users</strong> already connected<br>★★★★★ 4.9 App Store</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="iphone-mockup-v2.png" alt="P3 App on iPhone" class="hero-iphone">
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    Scroll
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ===== PARTNER LOGOS ===== -->
+<section class="partner-logos">
+  <div class="label">Trusted By Leading Institutions</div>
+  <div class="logo-grid">
+    <span class="logo-styled google">Google</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled nyu">NYU</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled obama">Obama Foundation</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled lsu">LSU</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled umich">U of Michigan</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled utaustin">UT Austin</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled cps">Chicago Public Schools</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled unt">UNT</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled xavier">Xavier University</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled lurie">Lurie Children's</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled gilead">Gilead</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled threea">3Advance</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled build">BUILD</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled csu">Chicago State</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled langston">Langston University</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled blackmen">100 Black Men</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled mbk">MBK Chicago</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled champs">CHAMPS Mentoring</span>
+    <span class="logo-dot"></span>
+    <span class="logo-styled hood">Project H.O.O.D.</span>
+  </div>
+</section>
+
+<!-- ===== WHY NOW ===== -->
+<section class="why-now">
+  <div class="why-now-inner">
+    <div class="section-header">
+      <div class="section-tag tag-light">Why Now</div>
+      <h2>Three gaps holding back the next generation</h2>
+      <p>Students lack access to the one resource that unlocks their potential: professional networks. Data shows three primary gaps limiting overlooked students.</p>
+    </div>
+    <div class="gaps-grid">
+      <div class="gap-card">
+        <div class="gap-icon">🤝</div>
+        <h3>The Mentorship Gap</h3>
+        <p>Busy schedules and geographic barriers make traditional mentoring difficult. Leaders have wisdom to share, but time and location create barriers.</p>
+      </div>
+      <div class="gap-card">
+        <div class="gap-icon">🔑</div>
+        <h3>The Access Gap</h3>
+        <p>Talent might be universal, however access is not. Many students lack access to timely, credible guidance for their careers when they need it most.</p>
+      </div>
+      <div class="gap-card">
+        <div class="gap-icon">🧭</div>
+        <h3>The Navigation Gap</h3>
+        <p>Even the most motivated students can get lost on where to start their career journey. Building industry networks is key to success.</p>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-num">70%</div><div class="stat-desc">of students feel unprepared for college &amp; career</div></div>
+      <div class="stat-item"><div class="stat-num">30%</div><div class="stat-desc">of students can access a mentor</div></div>
+      <div class="stat-item"><div class="stat-num">85%</div><div class="stat-desc">of jobs filled via professional networking</div></div>
+      <div class="stat-item"><div class="stat-num">500%</div><div class="stat-desc">more likely to succeed with a mentor</div></div>
+      <div class="stat-item"><div class="stat-num">65%</div><div class="stat-desc">of students will work in jobs that don't exist yet</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WORKFORCE OUTCOME OS — No connector ===== -->
+<section class="workforce-os">
+  <div class="section-header">
+    <div class="section-tag tag-crimson">The Platform</div>
+    <h2>A Workforce Outcome OS</h2>
+    <p style="color: var(--light-text);">P3 is more than a mentorship app — it's an operating system that transforms student journeys into measurable workforce outcomes.</p>
+  </div>
+  <div class="os-columns">
+    <div class="os-col">
+      <div class="os-col-icon">👤</div>
+      <h3>Students</h3>
+      <p>Free mobile app connecting students to mentors, scholarships, and career guidance.</p>
+      <ul class="os-col-features"><li>AI Smart Match</li><li>Monthly Scholarships</li><li>Career Video Library</li><li>Opportunity Marketplace</li></ul>
+    </div>
+    <div class="os-col">
+      <div class="os-col-icon">🎯</div>
+      <h3>Mentors</h3>
+      <p>A portal for professionals to share knowledge and guide the next generation.</p>
+      <ul class="os-col-features"><li>Mentor Portal</li><li>Video Content Upload</li><li>Q&A Guidance</li><li>Milestone Tracking</li></ul>
+    </div>
+    <div class="os-col">
+      <div class="os-col-icon">🏫</div>
+      <h3>Institutions</h3>
+      <p>Analytics dashboard turning engagement data into actionable insights.</p>
+      <ul class="os-col-features"><li>Impact Reports</li><li>Outcome Tracking</li><li>Equity Benchmarking</li><li>Custom Dashboards</li></ul>
+    </div>
+    <div class="os-col">
+      <div class="os-col-icon">📊</div>
+      <h3>Intelligence</h3>
+      <p>Data layer that ties everything together into workforce-ready outcomes.</p>
+      <ul class="os-col-features"><li>AI Matching Engine</li><li>Longitudinal Data</li><li>Industry Benchmarks</li><li>Predictive Analytics</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DASHBOARD PREVIEW — Real P3 Outcome Milestones ===== -->
+<section class="dashboard-preview">
+  <div class="dashboard-inner">
+    <div>
+      <div class="section-tag tag-maroon">Launching May 2026</div>
+      <h2>Student journeys become institutional intelligence</h2>
+      <p>Our analytics dashboard equips partner institutions with custom impact reports, industry benchmarks, and a long-term view of how mentorship drives student outcomes.</p>
+      <div class="dashboard-features">
+        <div class="dash-feat"><div class="icon">📈</div> Engagement &amp; retention metrics</div>
+        <div class="dash-feat"><div class="icon">🔄</div> Longitudinal outcome tracking across cohorts</div>
+        <div class="dash-feat"><div class="icon">⚖️</div> Equity data &amp; industry benchmarking</div>
+        <div class="dash-feat"><div class="icon">📋</div> Custom impact reports for stakeholders</div>
+      </div>
+      <a href="#" class="btn-light">Request a Demo →</a>
+    </div>
+    <div class="dashboard-visual">
+      <div class="dash-topbar">
+        <div class="dash-dot"></div><div class="dash-dot"></div><div class="dash-dot"></div>
+        <div class="dash-url">dashboard.pulseofp3.org</div>
+      </div>
+      <div class="dash-nav-tabs">
+        <div class="dash-tab">Overview</div>
+        <div class="dash-tab active">Outcomes</div>
+        <div class="dash-tab">Equity</div>
+        <div class="dash-tab">Reports</div>
+      </div>
+      <div class="dash-grid">
+        <!-- Top KPIs -->
+        <div class="dash-widget"><div class="widget-label">Active Mentees</div><div class="widget-value">347</div><div class="widget-trend">↑ 23% this quarter</div></div>
+        <div class="dash-widget"><div class="widget-label">AI Matches Made</div><div class="widget-value">189</div><div class="widget-trend">99.3% retention at 90 days</div></div>
+
+        <!-- Outcome Milestones — Real P3 data inspired -->
+        <div class="dash-outcomes-section">
+          <div class="outcomes-header">
+            <div class="widget-label">Student Outcome Milestones — All Cohorts</div>
+            <div class="outcome-period">2025 YTD</div>
+          </div>
+          <div class="milestone-grid">
+            <div class="milestone-card">
+              <div class="milestone-icon">🎯</div>
+              <div class="milestone-val">1,247</div>
+              <div class="milestone-label">Milestones Completed</div>
+              <div class="milestone-trend">↑ 108% vs Q2</div>
+            </div>
+            <div class="milestone-card">
+              <div class="milestone-icon">💼</div>
+              <div class="milestone-val">84</div>
+              <div class="milestone-label">Jobs Secured</div>
+              <div class="milestone-trend">↑ 42% YoY</div>
+            </div>
+            <div class="milestone-card">
+              <div class="milestone-icon">🎓</div>
+              <div class="milestone-val">$127K</div>
+              <div class="milestone-label">Scholarships Awarded</div>
+              <div class="milestone-trend">↑ 27% YoY</div>
+            </div>
+            <div class="milestone-card">
+              <div class="milestone-icon">🔗</div>
+              <div class="milestone-val">650</div>
+              <div class="milestone-label">New Members</div>
+              <div class="milestone-trend">+150 industry mentors</div>
+            </div>
+            <div class="milestone-card">
+              <div class="milestone-icon">📚</div>
+              <div class="milestone-val">12</div>
+              <div class="milestone-label">Career Pathways</div>
+              <div class="milestone-trend">STEM, Finance, Legal +</div>
+            </div>
+            <div class="milestone-card">
+              <div class="milestone-icon">⭐</div>
+              <div class="milestone-val">4.9</div>
+              <div class="milestone-label">App Store Rating</div>
+              <div class="milestone-trend">1,700 downloads</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Journey Funnel -->
+        <div class="dash-funnel">
+          <div class="widget-label" style="margin-bottom: 10px;">Student Journey Pipeline</div>
+          <div class="funnel-row">
+            <div class="funnel-label">Onboarded</div>
+            <div class="funnel-bar-wrap"><div class="funnel-bar f1" style="width:100%"><span>650</span></div></div>
+          </div>
+          <div class="funnel-row">
+            <div class="funnel-label">Matched</div>
+            <div class="funnel-bar-wrap"><div class="funnel-bar f2" style="width:72%"><span>468</span></div></div>
+          </div>
+          <div class="funnel-row">
+            <div class="funnel-label">Active 90d</div>
+            <div class="funnel-bar-wrap"><div class="funnel-bar f3" style="width:65%"><span>423</span></div></div>
+          </div>
+          <div class="funnel-row">
+            <div class="funnel-label">Placed / Hired</div>
+            <div class="funnel-bar-wrap"><div class="funnel-bar f4" style="width:13%"><span>84</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ROI CALCULATOR ===== -->
+<!-- WEBFLOW: Section. JS logic must go in Project Settings > Custom Code (Footer).
+     Form elements use native HTML selects + range input. Tier toggle = Div Blocks with onclick. -->
+<section class="roi-calculator" id="calculator">
+  <div class="roi-inner">
+    <div class="section-header">
+      <div class="section-tag tag-crimson">ROI Calculator</div>
+      <h2 style="color: var(--dark);">Impact You Can Measure</h2>
+      <p style="color: var(--light-text);">Estimate the impact of pairing your students with mentors through the P3 platform.</p>
+    </div>
+    <div class="roi-grid">
+      <div class="roi-inputs">
+        <h3>About Your Organization</h3>
+        <div class="input-group">
+          <label>Institution Type</label>
+          <select id="instType">
+            <option value="university">4-Year University</option>
+            <option value="community">Community College</option>
+            <option value="hbcu">HBCU</option>
+            <option value="k12">K-12 District</option>
+            <option value="nonprofit">Nonprofit / CBO</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Annual Tuition Per Student</label>
+          <select id="tuitionPerStudent">
+            <option value="5000">~$5,000</option>
+            <option value="12000">~$12,000</option>
+            <option value="25000" selected>~$25,000</option>
+            <option value="40000">~$40,000</option>
+            <option value="55000">~$55,000</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Current Mentorship Program</label>
+          <select id="currentProgram">
+            <option value="none">No formal program</option>
+            <option value="informal">Informal / ad-hoc mentoring</option>
+            <option value="formal">Formal program (manual matching)</option>
+            <option value="digital">Digital platform in place</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Students to Enroll</label>
+          <div class="slider-wrap">
+            <input type="range" id="studentCount" min="50" max="2000" value="500" step="50">
+            <div class="slider-value" id="studentDisplay">500 students</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Select Your P3 Plan</label>
+          <div class="tier-toggle">
+            <div class="tier-btn active" data-tier="essential" onclick="selectTier(this)">
+              <div class="tier-name">Essential</div>
+              <div class="tier-price">$10,000/yr</div>
+              <div class="tier-desc">Core matching + analytics</div>
+            </div>
+            <div class="tier-btn" data-tier="premium" onclick="selectTier(this)">
+              <div class="tier-name">Premium</div>
+              <div class="tier-price">$25,000/yr</div>
+              <div class="tier-desc">Full OS + longitudinal data</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="roi-results" id="roiResults">
+        <h3>Your Projected Impact</h3>
+        <div class="roi-subtitle">Based on P3 platform data &amp; national mentorship research</div>
+        <div class="roi-metric"><div class="metric-label">Mentor Matches Created</div><div class="metric-value" id="matchesVal">375</div><div class="metric-detail" id="matchDetail">at 75% match rate within 30 days</div></div>
+        <div class="roi-metric"><div class="metric-label">Projected Retention Lift</div><div class="metric-value" id="retentionVal">+23%</div><div class="metric-detail" id="retentionDetail">avg. retention improvement from mentored students</div></div>
+        <div class="roi-metric"><div class="metric-label">Tuition Revenue Saved</div><div class="metric-value" id="revenueSaved">$287K</div><div class="metric-detail" id="revenueDetail">retained students × annual tuition value</div></div>
+        <div class="roi-metric"><div class="metric-label">Cost Per Student</div><div class="metric-value" id="costPerVal">$20</div><div class="metric-detail">vs. $500+ for traditional mentorship programs</div></div>
+        <div class="roi-highlight">
+          <div class="big-num" id="roiMultiple">25x</div>
+          <div class="big-label">estimated return on investment</div>
+        </div>
+        <a href="#" class="btn-cta-calc">Request a Custom Analysis →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRESS — Bigger logos, 3x2 grid ===== -->
+<section class="social-proof">
+  <div class="section-header">
+    <div class="section-tag tag-crimson">In The Press</div>
+    <h2>The world is taking notice</h2>
+  </div>
+  <div class="press-logos-grid">
+    <div class="press-card-v2 abc">
+      <div class="pc-logo">ABC NEWS</div>
+      <div class="pc-type">Television</div>
+    </div>
+    <div class="press-card-v2 nyt">
+      <div class="pc-logo">The New York Times</div>
+      <div class="pc-type">Print</div>
+    </div>
+    <div class="press-card-v2 today">
+      <div class="pc-logo">TODAY</div>
+      <div class="pc-type">Television</div>
+    </div>
+    <div class="press-card-v2 adweek">
+      <div class="pc-logo">Ad Week NYC</div>
+      <div class="pc-type">Digital</div>
+    </div>
+    <div class="press-card-v2 versus">
+      <div class="pc-logo">VERSUS</div>
+      <div class="pc-type">Production</div>
+    </div>
+    <div class="press-card-v2 sixdeg">
+      <div class="pc-logo">6Degrees.org</div>
+      <div class="pc-type">Nonprofit</div>
+    </div>
+  </div>
+  <div class="quote-block">
+    <blockquote>P3 is building what should have existed decades ago — a direct bridge between ambitious young people and the mentors who can change their lives.</blockquote>
+    <cite>— Featured in national media coverage</cite>
+  </div>
+</section>
+
+<!-- ===== DUAL CTA — Enhanced ===== -->
+<section class="dual-cta">
+  <div class="dual-cta-grid">
+    <div class="dual-cta-card students">
+      <div class="card-eyebrow">For Students & Mentors</div>
+      <h3>Your mentor is one tap away</h3>
+      <p>Download the free P3 app and get matched with an industry professional who understands your goals and your journey.</p>
+      <div class="dual-cta-features">
+        <span>AI Matching</span>
+        <span>Career Pathways</span>
+        <span>Free Forever</span>
+      </div>
+      <a href="#" class="btn-white">Download Free App →</a>
+    </div>
+    <div class="dual-cta-card partners">
+      <div class="card-eyebrow">For Institutions & Partners</div>
+      <h3>Boost Retention and Outcomes</h3>
+      <p>Our analytics dashboard turns mentorship engagement into actionable insights your leadership team can act on.</p>
+      <div class="dual-cta-features">
+        <span>Outcome Tracking</span>
+        <span>Cohort Analytics</span>
+        <span>ROI Reports</span>
+      </div>
+      <a href="#" class="btn-white">Request a Demo →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="p3-logo-horizontal.png" alt="P3" class="footer-logo">
+      <p>Unlocking life-changing opportunities for young visionaries. Free on iOS &amp; Android.</p>
+      <p style="margin-top: 10px; font-size: 12px;">Chicago, IL · Founded 2018</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#">For Students</a><a href="#">For Mentors</a><a href="#">For Institutions</a><a href="#">Scholarships</a>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <a href="#">Our Story</a><a href="#">Team</a><a href="#">Annual Report</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">YouTube</a><a href="#">Donate</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</div>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* --- ROI Calculator Logic (v2 — reviewed & validated) ---
+ *
+ * Methodology:
+ * 1. User selects institution type, tuition per student, current program, student count, and P3 tier.
+ * 2. Match rate depends on tier: Essential 72%, Premium 85%.
+ * 3. Retention lift applies ONLY to matched students (only mentored students benefit).
+ *    Lift % varies by tier AND current program maturity:
+ *    - No program → largest lift (first-time structured mentorship)
+ *    - Existing digital platform → smallest lift (incremental improvement)
+ * 4. Tuition Revenue Saved = additionally retained students × annual tuition.
+ *    "Additionally retained" = matched students × lift % (students who stay because of mentorship).
+ * 5. ROI = Tuition Revenue Saved / P3 annual platform cost.
+ *
+ * Lift percentages are conservative estimates based on published mentorship research
+ * (MENTOR 2023, Inside Track, EAB) applied to the matched cohort only.
+ */
+
+const studentSlider = document.getElementById('studentCount');
+const studentDisplay = document.getElementById('studentDisplay');
+const tuitionSelect = document.getElementById('tuitionPerStudent');
+const programSelect = document.getElementById('currentProgram');
+
+studentSlider.addEventListener('input', () => {
+  studentDisplay.textContent = parseInt(studentSlider.value).toLocaleString() + ' students';
+  updateROI();
+});
+tuitionSelect.addEventListener('change', updateROI);
+programSelect.addEventListener('change', updateROI);
+
+function selectTier(el) {
+  document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  updateROI();
+}
+
+function updateROI() {
+  const students = parseInt(studentSlider.value);
+  const tuition = parseInt(tuitionSelect.value);
+  const program = programSelect.value;
+  const tier = document.querySelector('.tier-btn.active').dataset.tier;
+
+  // Platform cost
+  const price = tier === 'essential' ? 10000 : 25000;
+
+  // Match rate: Premium tier has better AI matching + dedicated support
+  const matchRate = tier === 'essential' ? 0.72 : 0.85;
+
+  // Retention lift % of MATCHED students — conservative, research-backed
+  const liftTable = {
+    none:     { essential: 12, premium: 18 },
+    informal: { essential: 9,  premium: 14 },
+    formal:   { essential: 6,  premium: 10 },
+    digital:  { essential: 3,  premium: 6  }
+  };
+  const retentionLift = liftTable[program]?.[tier] || 10;
+
+  // Matches created
+  const matches = Math.round(students * matchRate);
+
+  // Retained students — lift applies to MATCHED students only
+  const retainedStudents = Math.round(matches * (retentionLift / 100));
+
+  // Tuition revenue saved = retained students × annual tuition
+  const revenueSaved = retainedStudents * tuition;
+
+  // Cost per student served
+  const costPerStudent = Math.round(price / students);
+
+  // ROI multiple = revenue saved / platform cost
+  const roi = Math.round(revenueSaved / price);
+
+  // Update display
+  document.getElementById('matchesVal').textContent = matches.toLocaleString();
+  document.getElementById('matchDetail').textContent = 'at ' + Math.round(matchRate * 100) + '% match rate within 30 days';
+  document.getElementById('retentionVal').textContent = '+' + retentionLift + '%';
+  document.getElementById('retentionDetail').textContent = retainedStudents.toLocaleString() + ' additional students retained year-over-year';
+  document.getElementById('revenueSaved').textContent = '$' + (revenueSaved >= 1000000 ? (revenueSaved / 1000000).toFixed(1) + 'M' : Math.round(revenueSaved / 1000).toLocaleString() + 'K');
+  document.getElementById('revenueDetail').textContent = retainedStudents.toLocaleString() + ' retained × $' + tuition.toLocaleString() + '/student tuition';
+  document.getElementById('costPerVal').textContent = '$' + costPerStudent;
+  document.getElementById('roiMultiple').textContent = roi < 1 ? '<1x' : roi + 'x';
+}
+updateROI();
+</script>
+</body>
+</html>
