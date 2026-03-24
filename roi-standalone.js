@@ -11,7 +11,7 @@
     ':root{--pp-c:#D93A3A;--pp-ch:#c43232;--pp-wh:#fff;--pp-dk:#1a1a1a;--pp-m:#4a1020;--pp-md:#3a0c18;--pp-lt:#999;--pp-bt:#555;--pp-n3:#eee;--pp-n4:#c7c7c7;--pp-r:14px;--pp-tr:.3s cubic-bezier(.25,.46,.45,.94);--pp-fh:"Space Grotesk",sans-serif;--pp-fb:"Satoshi",sans-serif;--pp-fi:"Inter",sans-serif;}',
 
     // Nav layout + styling (full render — no native Webflow nav on this page)
-    '.p3-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: transparent; transition: background .3s, box-shadow .3s; }',
+    '.p3-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: rgba(58,12,24,0.85); backdrop-filter: blur(12px); transition: background .3s, box-shadow .3s; }',
     '.p3-nav .p3-nav-logo { display: flex; align-items: center; text-decoration: none; }',
     '.p3-nav .p3-nav-logo img { max-height: 36px; width: auto; object-fit: contain; }',
     '.p3-nav .p3-nav-links { display: flex; align-items: center; gap: 28px; }',
@@ -43,7 +43,7 @@
     '@media(max-width:480px){ .roi-ft-grid { grid-template-columns: 1fr; } }',
 
     // Page background
-    '.roi-page { padding: 100px 0 0; min-height: 100vh; background: var(--pp-wh); font-family: var(--pp-fb); }',
+    '.roi-page { padding: 100px 0 0; min-height: 100vh; background: var(--pp-md); font-family: var(--pp-fb); }',
 
     // ROI Section
     '.roi-section { padding: 60px 0 80px; background: linear-gradient(180deg, var(--pp-md), var(--pp-m)); color: var(--pp-wh); }',
