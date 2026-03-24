@@ -126,7 +126,7 @@
     nav = document.createElement('nav');
     nav.className = 'p3-nav';
     nav.innerHTML =
-      '<a href="/" class="p3-nav-logo"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b04bed9999adecd7f3e94f_P3%20Logo%20Light.svg" alt="Pulse of Perseverance" /></a>' +
+      '<a href="/" class="p3-nav-logo"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="Pulse of Perseverance" /></a>' +
       '<div class="p3-nav-links">' +
         '<a href="/for-students" class="p3-nav-link">For Students</a>' +
         '<a href="/partner" class="p3-nav-link">For Institutions</a>' +
@@ -213,7 +213,7 @@
   footerEl.innerHTML = '<div class="roi-ft-inner">' +
     '<div class="roi-ft-grid">' +
       '<div class="roi-ft-brand-col">' +
-        '<div class="roi-ft-brand"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b04bed9999adecd7f3e94f_P3%20Logo%20Light.svg" alt="P3"></div>' +
+        '<div class="roi-ft-brand"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3"></div>' +
         '<p class="roi-ft-tagline">Unlocking life-changing opportunities for young visionaries.</p>' +
         '<p class="roi-ft-tagline" style="font-size:.72rem;">Chicago, IL</p>' +
       '</div>' +
