@@ -22,14 +22,17 @@
     // Hero buttons mobile — match FM/PP exactly (14px 32px, 14px font)
     '@media(max-width: 768px) { .p3-btn-primary, .p3-btn-ghost { padding: 14px 32px !important; font-size: 14px !important; } }',
 
-    // Mobile padding reductions + heading size fix
+    // Dashboard heading size — match .p3-h2 exactly (42px desktop, 26px mobile)
+    '.p3-dash-h2 { font-size: 42px !important; line-height: 1.15 !important; }',
+    '@media(max-width: 600px) { .p3-dash-h2 { font-size: 26px !important; } }',
+
+    // Emoji icon centering in Why Now gap cards (flex already, but needs center alignment)
+    '.p3-gap-icon { align-items: center !important; justify-content: center !important; text-align: center !important; line-height: 1 !important; }',
+
+    // Mobile padding reductions
     '@media(max-width: 768px) {',
     '  .p3-dash-preview { padding-top: 32px !important; padding-bottom: 32px !important; }',
     '  .p3-platform-section { padding-top: 24px !important; }',
-    '  .p3-dash-h2 { font-size: 1.6rem !important; line-height: 1.2 !important; }',
-    '}',
-    '@media(max-width: 480px) {',
-    '  .p3-dash-h2 { font-size: 1.4rem !important; }',
     '}',
 
     // Footer compact layout on mobile — 2-column grid instead of single-column scroll
