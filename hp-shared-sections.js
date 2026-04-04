@@ -19,6 +19,12 @@
     // Nav scroll effect
     '.p3-nav.scrolled { background: rgba(26, 26, 26, 0.95) !important; backdrop-filter: blur(20px) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }',
 
+    // Hero buttons mobile — match FM/PP exactly (14px 32px, 14px font)
+    '@media(max-width: 768px) { .p3-btn-primary, .p3-btn-ghost { padding: 14px 32px !important; font-size: 14px !important; } }',
+
+    // Footer compact layout on mobile — 2-column grid instead of single-column scroll
+    '@media(max-width: 768px) { .p3-footer-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 24px 16px !important; } .p3-footer-brand { grid-column: 1 / -1; } .p3-footer-bottom { flex-wrap: wrap; justify-content: center; text-align: center; } }',
+
     // Home link hidden on desktop
     '.pp-home-desktop-hide { display: none; }',
     '@media(max-width: 991px) { .pp-home-desktop-hide { display: block; } }',
