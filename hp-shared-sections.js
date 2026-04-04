@@ -330,7 +330,7 @@
       '.pp-mobile-center a, .pp-mobile-center .p3-btn-primary, .pp-mobile-center .p3-btn-light, .pp-mobile-center .p3-btn-ghost{margin-left:auto!important;margin-right:auto!important;}' +
       // Why Now cards — center content; icon + H3 on same row via inline-flex
       '.p3-gap-card{text-align:center!important;}' +
-      '.p3-gap-card .p3-gap-icon{display:inline-block!important;vertical-align:middle!important;margin:0 8px 0 0!important;}' +
+      '.p3-gap-card .p3-gap-icon{display:inline-flex!important;align-items:center!important;justify-content:center!important;vertical-align:middle!important;margin:0 8px 0 0!important;line-height:1!important;text-align:center!important;}' +
       '.p3-gap-card .p3-h3{display:inline-block!important;vertical-align:middle!important;margin:0!important;}' +
       '.p3-gap-card .p3-body-text{display:block!important;margin-top:12px!important;text-align:center!important;}' +
     '}';
