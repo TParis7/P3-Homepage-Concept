@@ -288,4 +288,46 @@
     }
   });
 
+  // ========== MOBILE CENTERING (≤768px) ==========
+  // Tag the key sections with marker classes so CSS can center them on mobile only.
+
+  // Dashboard Preview section — center the header text + Learn More button on mobile
+  var dp = document.querySelector('.p3-dash-preview');
+  if (dp) dp.classList.add('pp-mobile-center');
+
+  // Dual CTA (Ready to transform... Get Started) — center header, sub, button on mobile
+  var dc = document.querySelector('.p3-dual-cta');
+  if (dc) dc.classList.add('pp-mobile-center');
+
+  // Why Now cards — find section containing "Mentorship Gap" and tag its cards
+  var allEls = document.querySelectorAll('h1,h2,h3,h4,h5,h6,p,div,span');
+  var whyNowSection = null;
+  for (var i = 0; i < allEls.length; i++) {
+    if (allEls[i].textContent && allEls[i].textContent.trim() === 'The Mentorship Gap') {
+      var card = allEls[i].closest('div');
+      while (card && card.parentElement && card.parentElement.children.length < 2) {
+        card = card.parentElement;
+      }
+      if (card) {
+        var cardParent = card.parentElement;
+        if (cardParent) {
+          cardParent.classList.add('pp-why-cards');
+          whyNowSection = cardParent;
+        }
+      }
+      break;
+    }
+  }
+
+  // Inject mobile centering CSS
+  var centerCss = document.createElement('style');
+  centerCss.textContent =
+    '@media(max-width:768px){' +
+      '.pp-mobile-center, .pp-mobile-center *{text-align:center!important;}' +
+      '.pp-mobile-center a, .pp-mobile-center .p3-btn-primary, .pp-mobile-center .p3-btn-light, .pp-mobile-center .p3-btn-ghost{margin-left:auto!important;margin-right:auto!important;}' +
+      '.pp-why-cards > *{text-align:center!important;}' +
+      '.pp-why-cards > * *{text-align:center!important;}' +
+    '}';
+  document.head.appendChild(centerCss);
+
 })();
