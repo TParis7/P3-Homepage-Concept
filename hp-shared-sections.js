@@ -22,6 +22,16 @@
     // Hero buttons mobile — match FM/PP exactly (14px 32px, 14px font)
     '@media(max-width: 768px) { .p3-btn-primary, .p3-btn-ghost { padding: 14px 32px !important; font-size: 14px !important; } }',
 
+    // Mobile padding reductions + heading size fix
+    '@media(max-width: 768px) {',
+    '  .p3-dash-preview { padding-top: 32px !important; padding-bottom: 32px !important; }',
+    '  .p3-platform-section { padding-top: 24px !important; }',
+    '  .p3-dash-h2 { font-size: 1.6rem !important; line-height: 1.2 !important; }',
+    '}',
+    '@media(max-width: 480px) {',
+    '  .p3-dash-h2 { font-size: 1.4rem !important; }',
+    '}',
+
     // Footer compact layout on mobile — 2-column grid instead of single-column scroll
     '@media(max-width: 768px) { .p3-footer-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 24px 16px !important; } .p3-footer-brand { grid-column: 1 / -1; } .p3-footer-bottom { flex-wrap: wrap; justify-content: center; text-align: center; } }',
 
@@ -291,6 +301,15 @@
   // ========== MOBILE CENTERING (≤768px) ==========
   // Tag the key sections with marker classes so CSS can center them on mobile only.
 
+  // Tag "The Platform" section so mobile padding CSS can target it
+  var platformTags = document.querySelectorAll('.p3-section-tag');
+  platformTags.forEach(function(t) {
+    if ((t.textContent || '').trim() === 'The Platform') {
+      var sec = t.closest('section');
+      if (sec) sec.classList.add('p3-platform-section');
+    }
+  });
+
   // Dashboard Preview section — center the header text + Learn More button on mobile
   var dp = document.querySelector('.p3-dash-preview');
   if (dp) dp.classList.add('pp-mobile-center');
@@ -299,34 +318,18 @@
   var dc = document.querySelector('.p3-dual-cta');
   if (dc) dc.classList.add('pp-mobile-center');
 
-  // Why Now cards — find section containing "Mentorship Gap" and tag its cards
-  var allEls = document.querySelectorAll('h1,h2,h3,h4,h5,h6,p,div,span');
-  var whyNowSection = null;
-  for (var i = 0; i < allEls.length; i++) {
-    if (allEls[i].textContent && allEls[i].textContent.trim() === 'The Mentorship Gap') {
-      var card = allEls[i].closest('div');
-      while (card && card.parentElement && card.parentElement.children.length < 2) {
-        card = card.parentElement;
-      }
-      if (card) {
-        var cardParent = card.parentElement;
-        if (cardParent) {
-          cardParent.classList.add('pp-why-cards');
-          whyNowSection = cardParent;
-        }
-      }
-      break;
-    }
-  }
-
-  // Inject mobile centering CSS
+  // Inject mobile centering CSS (target real Webflow class names)
   var centerCss = document.createElement('style');
   centerCss.textContent =
     '@media(max-width:768px){' +
+      // Dashboard Preview + Dual CTA (Ready to transform...) — center everything
       '.pp-mobile-center, .pp-mobile-center *{text-align:center!important;}' +
       '.pp-mobile-center a, .pp-mobile-center .p3-btn-primary, .pp-mobile-center .p3-btn-light, .pp-mobile-center .p3-btn-ghost{margin-left:auto!important;margin-right:auto!important;}' +
-      '.pp-why-cards > *{text-align:center!important;}' +
-      '.pp-why-cards > * *{text-align:center!important;}' +
+      // Why Now cards — center content; icon + H3 on same row via inline-flex
+      '.p3-gap-card{text-align:center!important;}' +
+      '.p3-gap-card .p3-gap-icon{display:inline-block!important;vertical-align:middle!important;margin:0 8px 0 0!important;}' +
+      '.p3-gap-card .p3-h3{display:inline-block!important;vertical-align:middle!important;margin:0!important;}' +
+      '.p3-gap-card .p3-body-text{display:block!important;margin-top:12px!important;text-align:center!important;}' +
     '}';
   document.head.appendChild(centerCss);
 
