@@ -37,7 +37,7 @@
     '.roi-mobile-close{position:absolute;top:20px;right:20px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--roi-wh);background:none;border:none;}',
 
     // Hero header (burgundy)
-    '.roi-hero{padding:130px 28px 40px!important;background:linear-gradient(180deg,var(--roi-md) 0%,var(--roi-m) 100%)!important;text-align:center!important;color:var(--roi-wh)!important;}',
+    '.roi-hero{padding:110px 28px 28px!important;background:linear-gradient(180deg,var(--roi-md) 0%,var(--roi-m) 100%)!important;text-align:center!important;color:var(--roi-wh)!important;}',
     '.roi-tag{display:inline-block!important;padding:5px 14px;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.1)!important;color:rgba(255,255,255,.65)!important;margin-bottom:14px;}',
     '.roi-hero h1{font-family:var(--roi-fh)!important;font-weight:700!important;font-size:clamp(1.8rem,3.5vw,2.5rem)!important;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;color:var(--roi-wh)!important;}',
     '.roi-hero h1 .accent{color:var(--roi-c)!important;}',
@@ -49,11 +49,11 @@
 
     // Two-column grid
     '.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--roi-hairline);border-radius:20px;overflow:hidden;background:var(--roi-wh)!important;box-shadow:0 8px 40px -12px rgba(74,16,32,0.1);}',
-    '@media(max-width:768px){.roi-grid{grid-template-columns:1fr;}}',
+    '@media(max-width:768px){.roi-grid{grid-template-columns:1fr;}.roi-hero{padding:90px 20px 24px!important;}.roi-hero h1{font-size:clamp(1.5rem,6vw,2rem)!important;}.roi-hero p{font-size:.88rem!important;}.roi-calc-section{padding:24px 16px 36px!important;}.roi-inputs{padding:24px 20px;}.roi-results{padding:24px 20px;}.roi-metrics{max-width:100%;}.roi-big-num{font-size:clamp(2.5rem,10vw,3.5rem);}.roi-assumptions{padding:16px 18px;margin-top:20px;font-size:.72rem;}.roi-back{margin-top:16px;}.gl{padding:28px 0;}.gl-item{width:240px;height:160px;}.gl-hd h2{font-size:1.3rem;}.roi-footer{padding:28px 0 16px;}.roi-ft-grid{gap:24px;margin-bottom:20px;}}',
 
     // Left: Inputs
     '.roi-inputs{padding:32px;background:var(--roi-wh)!important;border-right:1px solid var(--roi-hairline);}',
-    '@media(max-width:768px){.roi-inputs{border-right:none;border-bottom:1px solid var(--roi-hairline);}}',
+    '@media(max-width:768px){.roi-inputs{border-right:none;border-bottom:1px solid var(--roi-hairline);padding:24px 20px;}}',
     '.roi-inputs h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk)!important;margin-bottom:16px;display:flex;align-items:center;gap:8px;line-height:1.3!important;}',
     '.roi-inputs h3::before{content:"";width:4px;height:18px;background:var(--roi-c);border-radius:2px;}',
     '.roi-group{margin-bottom:16px;}',
@@ -68,7 +68,7 @@
     '.roi-slider-val{text-align:center;font-family:var(--roi-fh);font-size:.92rem;font-weight:700;color:var(--roi-dk);margin-top:8px;line-height:1.3!important;}',
 
     // Plan toggle
-    '.roi-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;}',
+    '.roi-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}',
     '.roi-plan{padding:18px 14px;border-radius:var(--roi-r);border:2px solid var(--roi-hairline);background:var(--roi-wh);cursor:pointer;text-align:center;transition:all var(--roi-tr);position:relative;}',
     '.roi-plan:hover{border-color:var(--roi-mute);}',
     '.roi-plan.active{border-color:var(--roi-c);background:#FFF5F5;box-shadow:0 4px 16px -4px rgba(217,58,58,.15);}',
@@ -114,6 +114,9 @@
     '.gl-fl{left:0;background:linear-gradient(90deg,var(--roi-dk),transparent);}',
     '.gl-fr{right:0;background:linear-gradient(-90deg,var(--roi-dk),transparent);}',
     '@keyframes gl-s{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}',
+
+    // Small phone (≤480px)
+    '@media(max-width:480px){.roi-hero{padding:85px 16px 20px!important;}.roi-tag{font-size:.6rem;padding:4px 10px;margin-bottom:10px;}.roi-hero h1{font-size:1.4rem!important;margin-bottom:8px;}.roi-hero p{font-size:.82rem!important;}.roi-calc-section{padding:20px 12px 28px!important;}.roi-inputs{padding:20px 16px;}.roi-results{padding:20px 16px;}.roi-inputs h3{font-size:.9rem;margin-bottom:12px;}.roi-results h3{font-size:.9rem;margin-bottom:16px;}.roi-group{margin-bottom:12px;}.roi-sel{padding:9px 10px;font-size:.82rem;padding-right:28px;}.roi-label{font-size:.72rem;margin-bottom:4px;}.roi-plans{gap:8px;margin-top:12px;}.roi-plan{padding:14px 10px;}.roi-plan-badge{font-size:.52rem;top:-8px;padding:2px 8px;}.roi-plan-name{font-size:.85rem;}.roi-plan-price{font-size:.8rem;}.roi-plan-desc{font-size:.65rem;}.roi-slider-val{font-size:.82rem;}.roi-big-num{font-size:2.5rem;}.roi-big-label{font-size:.75rem;}.roi-highlight{margin-bottom:18px;}.roi-metrics{gap:10px;margin-bottom:18px;}.roi-metric{padding:10px 6px;border-radius:10px;}.roi-metric-value{font-size:1.15rem;}.roi-metric-label{font-size:.62rem;}.roi-cta{padding:11px 24px;font-size:.82rem;}.roi-assumptions{padding:14px 14px;font-size:.68rem;margin-top:16px;}.roi-back{font-size:.75rem;margin-top:12px;}.gl-item{width:220px;height:145px;}}',
 
     // Footer
     '.roi-footer{background:var(--roi-dk)!important;color:var(--roi-wh);padding:40px 0 20px;font-family:var(--roi-fb);font-size:16px!important;line-height:1.5!important;}',
@@ -232,7 +235,7 @@
           '<div class="roi-metric"><div class="roi-metric-value" id="roi-revenue">$750K</div><div class="roi-metric-label">Tuition Saved</div></div>' +
           '<div class="roi-metric"><div class="roi-metric-value" id="roi-cost">$20</div><div class="roi-metric-label">Cost Per Student</div></div>' +
         '</div>' +
-        '<a href="mailto:team@pulseofp3.org?subject=ROI%20Analysis%20Request" class="roi-cta">Request a Custom Analysis &rarr;</a>' +
+        '<a href="https://calendly.com/alex-pulseofp3/30min" target="_blank" class="roi-cta">Schedule a Call &rarr;</a>' +
       '</div>' +
 
     '</div>' +
