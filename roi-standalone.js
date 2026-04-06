@@ -1,178 +1,145 @@
 (function() {
-  // Load Google Fonts
+  // ========== FONTS ==========
   var fonts = document.createElement('link');
   fonts.rel = 'stylesheet';
-  fonts.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Inter:wght@400;500;600&family=Satoshi:wght@400;600;700&display=swap';
+  fonts.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Satoshi:wght@400;500;600;700&display=swap';
   document.head.appendChild(fonts);
 
-  // ========== CSS ==========
+  // ========== CSS (scoped with .roi- prefix) ==========
   var css = document.createElement('style');
   css.textContent = [
-    ':root{--pp-c:#D93A3A;--pp-ch:#c43232;--pp-wh:#fff;--pp-dk:#1a1a1a;--pp-m:#4a1020;--pp-md:#3a0c18;--pp-lt:#999;--pp-bt:#555;--pp-n3:#eee;--pp-n4:#c7c7c7;--pp-r:14px;--pp-tr:.3s cubic-bezier(.25,.46,.45,.94);--pp-fh:"Space Grotesk",sans-serif;--pp-fb:"Satoshi",sans-serif;--pp-fi:"Inter",sans-serif;}',
+    ':root{--roi-c:#D93A3A;--roi-ch:#c43232;--roi-m:#4a1020;--roi-md:#3a0c18;--roi-dk:#1a1a1a;--roi-wh:#fff;--roi-cream:#FAF6F1;--roi-lt:#6E6A66;--roi-mute:#999;--roi-hairline:#E6DED4;--roi-r:14px;--roi-tr:.3s cubic-bezier(.25,.46,.45,.94);--roi-fh:"Space Grotesk",sans-serif;--roi-fb:"Satoshi",sans-serif;--roi-fi:"Inter",sans-serif;}',
 
-    // Nav layout + styling (full render — no native Webflow nav on this page)
-    '.p3-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: rgba(58,12,24,0.85); backdrop-filter: blur(12px); transition: background .3s, box-shadow .3s; }',
-    '.p3-nav .p3-nav-logo { display: flex; align-items: center; text-decoration: none; }',
-    '.p3-nav .p3-nav-logo img { max-height: 36px; width: auto; object-fit: contain; }',
-    '.p3-nav .p3-nav-links { display: flex; align-items: center; gap: 28px; }',
-    '.p3-nav .p3-nav-link { font-family: var(--pp-fi); font-size: .85rem; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; transition: color var(--pp-tr); }',
-    '.p3-nav .p3-nav-link:hover { color: var(--pp-wh); }',
-    '.p3-nav .p3-nav-cta { font-family: var(--pp-fb); font-size: .82rem; font-weight: 600; color: var(--pp-wh); background: var(--pp-c); padding: 9px 20px; border-radius: 100px; text-decoration: none; transition: all var(--pp-tr); }',
-    '.p3-nav .p3-nav-cta:hover { background: var(--pp-ch); }',
-    '.p3-nav.scrolled { background: rgba(26, 26, 26, 0.95) !important; backdrop-filter: blur(20px) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }',
-    '@media(max-width:991px){ .p3-nav { padding: 16px; height: 64px; } .p3-nav .p3-nav-links { display: none; } .p3-nav .p3-nav-cta { display: none; } .p3-nav .p3-nav-logo img { max-height: 36px; height: 36px; } }',
+    // Hero header (burgundy)
+    '.roi-hero{padding:110px 28px 32px;background:linear-gradient(180deg,var(--roi-md) 0%,var(--roi-m) 100%);text-align:center;color:var(--roi-wh);}',
+    '.roi-tag{display:inline-block;padding:5px 14px;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);margin-bottom:14px;}',
+    '.roi-hero h1{font-family:var(--roi-fh);font-weight:700;font-size:clamp(1.8rem,3.5vw,2.5rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}',
+    '.roi-hero h1 .accent{color:var(--roi-c);}',
+    '.roi-hero p{font-size:clamp(.88rem,1.3vw,1rem);color:rgba(255,255,255,.55);max-width:520px;margin:0 auto;line-height:1.6;}',
 
-    // Footer
-    '.roi-footer { background: var(--pp-dk); color: var(--pp-wh); padding: 40px 0 20px; font-family: var(--pp-fb); }',
-    '.roi-ft-inner { max-width: 1100px; margin: 0 auto; padding: 0 28px; }',
-    '.roi-ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 28px; }',
-    '.roi-ft-brand img { height: 28px; margin-bottom: 12px; }',
-    '.roi-ft-tagline { font-size: .82rem; color: rgba(255,255,255,.5); line-height: 1.55; margin-bottom: 12px; }',
-    '.roi-ft-social { display: flex; gap: 10px; }',
-    '.roi-ft-social a { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.5); text-decoration: none; font-size: .75rem; transition: all var(--pp-tr); }',
-    '.roi-ft-social a:hover { background: var(--pp-c); color: var(--pp-wh); }',
-    '.roi-ft-col h4 { font-family: var(--pp-fh); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 14px; }',
-    '.roi-ft-col a { display: block; font-size: .82rem; color: rgba(255,255,255,.6); text-decoration: none; padding: 3px 0; transition: color var(--pp-tr); }',
-    '.roi-ft-col a:hover { color: var(--pp-wh); }',
-    '.roi-ft-bottom { border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }',
-    '.roi-ft-copy { font-size: .72rem; color: rgba(255,255,255,.3); }',
-    '.roi-ft-links { display: flex; gap: 16px; }',
-    '.roi-ft-links a { font-size: .72rem; color: rgba(255,255,255,.3); text-decoration: none; }',
-    '.roi-ft-links a:hover { color: rgba(255,255,255,.6); }',
-    '@media(max-width:768px){ .roi-ft-grid { grid-template-columns: 1fr 1fr; } }',
-    '@media(max-width:480px){ .roi-ft-grid { grid-template-columns: 1fr; } }',
+    // Calculator section (white bg)
+    '.roi-calc-section{padding:32px 28px 48px;background:var(--roi-wh);}',
+    '.roi-calc-inner{max-width:1060px;margin:0 auto;}',
 
-    // Page background
-    '.roi-page { padding: 100px 0 0; min-height: 100vh; background: var(--pp-md); font-family: var(--pp-fb); }',
+    // Two-column grid
+    '.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--roi-hairline);border-radius:20px;overflow:hidden;background:var(--roi-wh);box-shadow:0 8px 40px -12px rgba(74,16,32,0.1);}',
+    '@media(max-width:768px){.roi-grid{grid-template-columns:1fr;}}',
 
-    // ROI Section
-    '.roi-section { padding: 60px 0 80px; background: linear-gradient(180deg, var(--pp-md), var(--pp-m)); color: var(--pp-wh); }',
-    '.roi-ctn { max-width: 1100px; margin: 0 auto; padding: 0 28px; }',
-    '.roi-hd { text-align: center; margin-bottom: 40px; }',
-    '.roi-tag { display: inline-flex; padding: 4px 12px; border-radius: 100px; font-size: .65rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.65); }',
-    '.roi-hd h1 { font-family: var(--pp-fh); font-weight: 700; font-size: clamp(1.8rem, 3.5vw, 2.5rem); line-height: 1.15; letter-spacing: -.02em; color: var(--pp-wh); margin: 0 0 12px; }',
-    '.roi-hd p { font-size: clamp(.9rem, 1.4vw, 1.05rem); color: rgba(255,255,255,.6); max-width: 560px; margin: 0 auto; line-height: 1.65; }',
-
-    // Grid layout
-    '.roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }',
-    '@media(max-width:768px){ .roi-grid { grid-template-columns: 1fr; } }',
-
-    // Inputs panel
-    '.roi-inputs { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 28px; }',
-    '.roi-inputs h3 { font-family: var(--pp-fh); font-size: 1.1rem; font-weight: 700; color: var(--pp-wh); margin-bottom: 20px; }',
-    '.roi-group { margin-bottom: 16px; }',
-    '.roi-label { font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.7); margin-bottom: 6px; }',
-    '.roi-sel { width: 100%; padding: 10px 12px; border: 1px solid rgba(255,255,255,.15); border-radius: var(--pp-r); font-family: var(--pp-fb); font-size: .85rem; color: var(--pp-wh); background: rgba(255,255,255,.08); -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'14\' height=\'14\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23999\' stroke-width=\'2\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer; transition: border-color var(--pp-tr); }',
-    '.roi-sel:focus { outline: none; border-color: var(--pp-c); }',
-    '.roi-sel option { background: var(--pp-dk); color: var(--pp-wh); }',
+    // Left: Inputs
+    '.roi-inputs{padding:32px;background:var(--roi-wh);border-right:1px solid var(--roi-hairline);}',
+    '@media(max-width:768px){.roi-inputs{border-right:none;border-bottom:1px solid var(--roi-hairline);}}',
+    '.roi-inputs h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk);margin-bottom:20px;display:flex;align-items:center;gap:8px;}',
+    '.roi-inputs h3::before{content:"";width:4px;height:18px;background:var(--roi-c);border-radius:2px;}',
+    '.roi-group{margin-bottom:16px;}',
+    '.roi-label{font-size:.78rem;font-weight:600;color:var(--roi-lt);margin-bottom:6px;}',
+    '.roi-sel{width:100%;padding:10px 12px;border:1px solid var(--roi-hairline);border-radius:10px;font-family:var(--roi-fb);font-size:.85rem;color:var(--roi-dk);background:var(--roi-wh);-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'14\' height=\'14\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23999\' stroke-width=\'2\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;cursor:pointer;transition:border-color var(--roi-tr);}',
+    '.roi-sel:focus{outline:none;border-color:var(--roi-c);}',
 
     // Slider
-    '.roi-slider { width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; background: rgba(255,255,255,.15); outline: none; cursor: pointer; }',
-    '.roi-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--pp-c); cursor: pointer; box-shadow: 0 2px 8px rgba(217,58,58,.4); }',
-    '.roi-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--pp-c); cursor: pointer; border: none; }',
-    '.roi-slider-val { text-align: center; font-family: var(--pp-fh); font-size: .95rem; font-weight: 700; color: var(--pp-wh); margin-top: 8px; }',
+    '.roi-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--roi-hairline);outline:none;cursor:pointer;}',
+    '.roi-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--roi-c);cursor:pointer;box-shadow:0 2px 8px rgba(217,58,58,.3);}',
+    '.roi-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--roi-c);cursor:pointer;border:none;}',
+    '.roi-slider-val{text-align:center;font-family:var(--roi-fh);font-size:.92rem;font-weight:700;color:var(--roi-dk);margin-top:8px;}',
 
     // Plan toggle
-    '.roi-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }',
-    '.roi-plan { padding: 14px; border-radius: var(--pp-r); border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); cursor: pointer; text-align: center; transition: all var(--pp-tr); }',
-    '.roi-plan:hover { border-color: rgba(255,255,255,.25); }',
-    '.roi-plan.active { border-color: var(--pp-c); background: rgba(217,58,58,.12); }',
-    '.roi-plan-name { font-family: var(--pp-fh); font-size: .9rem; font-weight: 700; color: var(--pp-wh); }',
-    '.roi-plan-price { font-size: .82rem; color: var(--pp-c); font-weight: 600; margin: 2px 0; }',
-    '.roi-plan-desc { font-size: .68rem; color: rgba(255,255,255,.5); }',
+    '.roi-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;}',
+    '.roi-plan{padding:18px 14px;border-radius:var(--roi-r);border:2px solid var(--roi-hairline);background:var(--roi-wh);cursor:pointer;text-align:center;transition:all var(--roi-tr);position:relative;}',
+    '.roi-plan:hover{border-color:var(--roi-mute);}',
+    '.roi-plan.active{border-color:var(--roi-c);background:#FFF5F5;box-shadow:0 4px 16px -4px rgba(217,58,58,.15);}',
+    '.roi-plan-badge{display:none;position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-family:var(--roi-fh);font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--roi-c);color:var(--roi-wh);padding:2px 10px;border-radius:100px;white-space:nowrap;}',
+    '.roi-plan.active .roi-plan-badge{display:block;}',
+    '.roi-plan-name{font-family:var(--roi-fh);font-size:.95rem;font-weight:700;color:var(--roi-dk);}',
+    '.roi-plan-price{font-size:.88rem;color:var(--roi-c);font-weight:700;margin:4px 0 2px;}',
+    '.roi-plan-desc{font-size:.72rem;color:var(--roi-lt);line-height:1.4;}',
 
-    // Results panel
-    '.roi-results { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 28px; }',
-    '.roi-results h3 { font-family: var(--pp-fh); font-size: 1.1rem; font-weight: 700; color: var(--pp-wh); margin-bottom: 20px; text-align: center; }',
-    '.roi-metric { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08); }',
-    '.roi-metric:last-of-type { border-bottom: none; }',
-    '.roi-metric-label { font-size: .75rem; color: rgba(255,255,255,.5); font-weight: 500; margin-bottom: 2px; }',
-    '.roi-metric-value { font-family: var(--pp-fh); font-size: 1.6rem; font-weight: 700; color: var(--pp-wh); }',
-    '.roi-metric-detail { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: 2px; }',
+    // Right: Results
+    '.roi-results{padding:32px;background:#FAFAF8;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}',
+    '.roi-results h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk);margin-bottom:24px;}',
+    '.roi-highlight{margin-bottom:24px;}',
+    '.roi-big-num{font-family:var(--roi-fh);font-size:clamp(3rem,6vw,4.5rem);font-weight:700;color:var(--roi-c);line-height:1;}',
+    '.roi-big-label{font-size:.82rem;color:var(--roi-mute);margin-top:4px;font-weight:500;}',
+    '.roi-metrics{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:380px;margin-bottom:24px;}',
+    '.roi-metric{text-align:center;padding:14px 8px;background:var(--roi-wh);border:1px solid var(--roi-hairline);border-radius:12px;}',
+    '.roi-metric-value{font-family:var(--roi-fh);font-size:1.4rem;font-weight:700;color:var(--roi-dk);line-height:1.1;}',
+    '.roi-metric-label{font-size:.7rem;color:var(--roi-mute);font-weight:500;margin-top:4px;line-height:1.3;}',
+    '.roi-cta{display:inline-block;padding:13px 32px;border-radius:100px;font-family:var(--roi-fb);font-size:.88rem;font-weight:600;color:var(--roi-wh);background:var(--roi-c);text-decoration:none;transition:all var(--roi-tr);box-shadow:0 4px 14px rgba(217,58,58,.25);}',
+    '.roi-cta:hover{background:var(--roi-ch);transform:translateY(-1px);}',
 
-    // Highlight
-    '.roi-highlight { text-align: center; margin: 20px 0; padding: 24px; background: rgba(217,58,58,.12); border-radius: var(--pp-r); border: 1px solid rgba(217,58,58,.2); }',
-    '.roi-big-num { font-family: var(--pp-fh); font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; color: var(--pp-c); line-height: 1; }',
-    '.roi-big-label { font-size: .82rem; color: rgba(255,255,255,.6); margin-top: 4px; }',
-
-    // CTA button
-    '.roi-cta { display: block; width: 100%; padding: 14px 28px; border-radius: 100px; font-family: var(--pp-fb); font-size: .9rem; font-weight: 600; text-align: center; color: var(--pp-wh); background: var(--pp-c); border: none; cursor: pointer; transition: all var(--pp-tr); box-shadow: 0 4px 14px rgba(217,58,58,.3); text-decoration: none; margin-top: 16px; }',
-    '.roi-cta:hover { background: var(--pp-ch); transform: translateY(-1px); }',
-    '.roi-cta::after { content: " \\2192"; }',
+    // Assumptions disclaimer
+    '.roi-assumptions{max-width:1060px;margin:28px auto 0;padding:20px 24px;background:#F9F7F4;border:1px solid var(--roi-hairline);border-radius:12px;font-size:.75rem;line-height:1.6;color:var(--roi-lt);}',
+    '.roi-assumptions strong{display:block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--roi-mute);margin-bottom:6px;}',
 
     // Back link
-    '.roi-back { display: inline-flex; align-items: center; gap: 6px; margin: 24px 0 0; padding: 0 28px; font-size: .85rem; color: var(--pp-bt); text-decoration: none; font-family: var(--pp-fb); }',
-    '.roi-back:hover { color: var(--pp-c); }',
-    '.roi-back::before { content: "\\2190"; }',
+    '.roi-back{display:block;text-align:center;margin-top:20px;font-size:.82rem;color:var(--roi-mute);text-decoration:none;font-family:var(--roi-fb);}',
+    '.roi-back:hover{color:var(--roi-c);}',
 
-    // Hamburger menu (mobile)
-    '.roi-hamburger { display: none; width: 28px; height: 28px; cursor: pointer; flex-direction: column; justify-content: center; align-items: center; gap: 5px; z-index: 10001; position: relative; }',
-    '.roi-hamburger span { display: block; width: 22px; height: 2px; background: var(--pp-wh); border-radius: 2px; transition: all .3s ease; }',
-    '@media(max-width:991px){ .roi-hamburger { display: flex; } }',
-
-    // Mobile overlay
-    '.roi-mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(26,26,26,.98); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }',
-    '.roi-mobile-overlay.open { display: flex; }',
-    '.roi-mobile-overlay a { font-family: var(--pp-fb); font-size: 1.2rem; color: var(--pp-wh); text-decoration: none; padding: 8px 24px; transition: color .3s; }',
-    '.roi-mobile-overlay a:hover { color: var(--pp-c); }',
-    '.roi-mobile-close { position: absolute; top: 20px; right: 20px; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--pp-wh); background: none; border: none; }',
+    // Community gallery
+    '.gl{padding:40px 0;background:var(--roi-dk);overflow:hidden;}',
+    '.gl .ctn{max-width:1200px;margin:0 auto;padding:0 28px;}',
+    '.gl-hd{text-align:center;margin-bottom:24px;}',
+    '.gl-hd h2{color:var(--roi-wh);margin-bottom:6px;font-size:clamp(1.3rem,2.5vw,1.8rem);font-family:var(--roi-fh);font-weight:700;line-height:1.15;letter-spacing:-.02em;}',
+    '.gl-hd p{color:rgba(255,255,255,.45);font-size:.85rem;}',
+    '.gl-wrap{position:relative;overflow:hidden;}',
+    '.gl-track{display:flex;gap:12px;animation:gl-s 40s linear infinite;width:max-content;}',
+    '.gl-track:hover{animation-play-state:paused;}',
+    '.gl-item{width:280px;height:185px;border-radius:var(--roi-r);overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.05);}',
+    '.gl-item img{width:100%;height:100%;object-fit:cover;}',
+    '.gl-fl,.gl-fr{position:absolute;top:0;bottom:0;width:50px;z-index:2;pointer-events:none;}',
+    '.gl-fl{left:0;background:linear-gradient(90deg,var(--roi-dk),transparent);}',
+    '.gl-fr{right:0;background:linear-gradient(-90deg,var(--roi-dk),transparent);}',
+    '@keyframes gl-s{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}'
   ].join('\n');
   document.head.appendChild(css);
 
-  // ========== RENDER NAVBAR ==========
-  // Create the same nav as partner page (since this page has no native Webflow navbar)
-  var nav = document.querySelector('.p3-nav');
-  if (!nav) {
-    nav = document.createElement('nav');
-    nav.className = 'p3-nav';
-    nav.innerHTML =
-      '<a href="/" class="p3-nav-logo"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="Pulse of Perseverance" /></a>' +
-      '<div class="p3-nav-links">' +
-        '<a href="/for-students" class="p3-nav-link">For Students</a>' +
-        '<a href="/partner" class="p3-nav-link">For Institutions</a>' +
-        '<a href="/for-mentors" class="p3-nav-link">For Mentors</a>' +
-        '<a href="/about/about" class="p3-nav-link">About</a>' +
-      '</div>' +
-      '<a href="/download" class="p3-nav-cta">Get the App</a>' +
-      '<div class="roi-hamburger"><span></span><span></span><span></span></div>';
-    document.body.insertBefore(nav, document.body.firstChild);
+  // ========== FIND INSERTION POINT ==========
+  // The Webflow page has a native navbar and footer. We inject BETWEEN them.
+  // Hide any existing main-wrapper content (the old calculator) and insert ours.
+  var mainWrapper = document.querySelector('.main-wrapper');
+  if (mainWrapper) {
+    // Hide all children except the Webflow navbar (first child) and footer
+    var children = Array.from(mainWrapper.children);
+    children.forEach(function(child) {
+      // Keep Webflow nav and footer; hide everything else
+      var tag = child.tagName.toLowerCase();
+      var isNav = tag === 'nav' || child.classList.contains('w-nav') || child.getAttribute('data-collapse') === 'medium';
+      var isFooter = tag === 'footer' || child.classList.contains('footer-v2') || child.classList.contains('footer');
+      if (!isNav && !isFooter) {
+        child.style.display = 'none';
+      }
+    });
   }
 
-  // Scroll effect
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 40) { nav.classList.add('scrolled'); }
-    else { nav.classList.remove('scrolled'); }
+  // ========== GALLERY IMAGE IDs ==========
+  var galleryIds = [
+    '1VEBoKGQSCuMfu3xja6eqq--nNyesAtbH','1xLZvOI4DTmehebDOoxhg6go144DQRAq6',
+    '1-PfGnpKw5O4oP7R82z0LZeIwqPEN5RVS','1GjI1ezcUWIvsArSwuKiAQJKhKnJezqlb',
+    '1qlunFiyvQZ0Bm9W7cf72HobYxvcdn2Iv','1NwPpiTolw-yWfSlpJSgF27vjCF38zFqJ',
+    '1fvZGnClfRDra7-e_OE8ZL3RH6vn8m-NY','1KTyzk9hqvayhhbgAHISIB5UrxySmNQ3W',
+    '1p_JXeXs3FgEp7EtBK39gDu95R8IlQY_q','1JQpeZKiRHm8YOVS5BBOx2cvX0eK_6IcG',
+    '1pzIHKXrF4QsXxuwaml4WIbopI0LHCOLF','1_bkjZcAAEmeQ36acIE7ZR4rhYyGgHK8u',
+    '1X8mHOZGo5yeZlh0RSiim_sOITnbGDyrO','10RpJT0-T1eSPTar7HODCk2wAPSOf_rKf',
+    '1UDWRuNdQsynpqRV7YE-0RLIZ28V9pA7A'
+  ];
+  var galleryItems = galleryIds.map(function(id) {
+    return '<div class="gl-item"><img src="https://drive.google.com/thumbnail?id=' + id + '&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>';
   });
+  // Duplicate for seamless loop
+  var galleryTrack = galleryItems.concat(galleryItems).join('');
 
-  // Mobile overlay
-  var overlay = document.createElement('div');
-  overlay.className = 'roi-mobile-overlay';
-  overlay.innerHTML = '<button class="roi-mobile-close">&times;</button>' +
-    '<a href="/">Home</a>' +
-    '<a href="/for-students">For Students</a>' +
-    '<a href="/partner">For Institutions</a>' +
-    '<a href="/for-mentors">For Mentors</a>' +
-    '<a href="/about/about">About</a>' +
-    '<a href="/download" style="background:var(--pp-c);border-radius:100px;padding:12px 28px;font-weight:600;">Get the App</a>';
-  document.body.appendChild(overlay);
-
-  var hamburger = nav.querySelector('.roi-hamburger');
-  if (hamburger) {
-    hamburger.addEventListener('click', function() { overlay.classList.add('open'); });
-  }
-  overlay.querySelector('.roi-mobile-close').addEventListener('click', function() { overlay.classList.remove('open'); });
-
-  // ========== ROI CALCULATOR HTML ==========
-  var wrapper = document.querySelector('.main-wrapper') || document.body;
-  var roiPage = document.createElement('div');
-  roiPage.className = 'roi-page';
-  roiPage.innerHTML = '<section class="roi-section"><div class="roi-ctn">' +
-    '<div class="roi-hd">' +
+  // ========== BUILD HTML ==========
+  var container = document.createElement('div');
+  container.className = 'roi-redesign-wrapper';
+  container.innerHTML =
+    // HERO
+    '<section class="roi-hero">' +
       '<div class="roi-tag">ROI Calculator</div>' +
-      '<h1>Impact You Can Measure</h1>' +
+      '<h1>Impact You Can <span class="accent">Measure</span></h1>' +
       '<p>Estimate the impact of pairing your students with mentors through the P3 platform.</p>' +
-    '</div>' +
-    '<div class="roi-grid">' +
+    '</section>' +
+
+    // CALCULATOR
+    '<section class="roi-calc-section"><div class="roi-calc-inner"><div class="roi-grid">' +
+
       // Left: Inputs
       '<div class="roi-inputs">' +
         '<h3>About Your Organization</h3>' +
@@ -187,70 +154,81 @@
           '<div class="roi-slider-val" id="roi-sd">500 students</div></div>' +
         '<div class="roi-group"><div class="roi-label">Select Your P3 Plan</div>' +
           '<div class="roi-plans">' +
-            '<div class="roi-plan active" data-plan="essential"><div class="roi-plan-name">Essential</div><div class="roi-plan-price">$10,000/yr</div><div class="roi-plan-desc">Core matching + analytics</div></div>' +
-            '<div class="roi-plan" data-plan="premium"><div class="roi-plan-name">Premium</div><div class="roi-plan-price">$25,000/yr</div><div class="roi-plan-desc">Full OS + longitudinal data</div></div>' +
+            '<div class="roi-plan active" data-plan="essential"><span class="roi-plan-badge">Selected</span><div class="roi-plan-name">Essential</div><div class="roi-plan-price">$10,000/yr</div><div class="roi-plan-desc">Core matching + analytics</div></div>' +
+            '<div class="roi-plan" data-plan="premium"><span class="roi-plan-badge">Selected</span><div class="roi-plan-name">Premium</div><div class="roi-plan-price">$25,000/yr</div><div class="roi-plan-desc">Dashboard + longitudinal data</div></div>' +
           '</div></div>' +
       '</div>' +
+
       // Right: Results
       '<div class="roi-results">' +
         '<h3>Your Projected Impact</h3>' +
-        '<div class="roi-metric"><div class="roi-metric-label">Mentor Matches Created</div><div class="roi-metric-value" id="roi-matches">360</div><div class="roi-metric-detail" id="roi-matches-d">at 72% match rate in 30 days</div></div>' +
-        '<div class="roi-metric"><div class="roi-metric-label">Projected Retention Lift</div><div class="roi-metric-value" id="roi-retention">+12%</div><div class="roi-metric-detail" id="roi-retention-d">43 students retained YoY</div></div>' +
-        '<div class="roi-metric"><div class="roi-metric-label">Tuition Revenue Saved</div><div class="roi-metric-value" id="roi-revenue">$1.1M</div><div class="roi-metric-detail" id="roi-revenue-d">retained students × annual tuition value</div></div>' +
-        '<div class="roi-metric"><div class="roi-metric-label">Cost Per Student</div><div class="roi-metric-value" id="roi-cost">$20</div><div class="roi-metric-detail" id="roi-cost-d">vs. $500+ for traditional mentorship programs</div></div>' +
-        '<div class="roi-highlight"><div class="roi-big-num" id="roi-roi">108x</div><div class="roi-big-label">estimated return on investment</div></div>' +
-        '<a href="mailto:team@pulseofp3.org?subject=ROI%20Analysis%20Request" class="roi-cta">Request a Custom Analysis</a>' +
+        '<div class="roi-highlight"><div class="roi-big-num" id="roi-roi">15x</div><div class="roi-big-label">estimated return on investment</div></div>' +
+        '<div class="roi-metrics">' +
+          '<div class="roi-metric"><div class="roi-metric-value" id="roi-savings">$240K</div><div class="roi-metric-label">Savings vs. Traditional</div></div>' +
+          '<div class="roi-metric"><div class="roi-metric-value" id="roi-retention">+6%</div><div class="roi-metric-label">Retention Lift</div></div>' +
+          '<div class="roi-metric"><div class="roi-metric-value" id="roi-revenue">$750K</div><div class="roi-metric-label">Tuition Saved</div></div>' +
+          '<div class="roi-metric"><div class="roi-metric-value" id="roi-cost">$20</div><div class="roi-metric-label">Cost Per Student</div></div>' +
+        '</div>' +
+        '<a href="mailto:team@pulseofp3.org?subject=ROI%20Analysis%20Request" class="roi-cta">Request a Custom Analysis &rarr;</a>' +
       '</div>' +
-    '</div>' +
-    '<a href="/" class="roi-back">Back to Home</a>' +
-  '</div></section>';
 
-  wrapper.appendChild(roiPage);
-
-  // ========== RENDER FOOTER ==========
-  var footerEl = document.createElement('footer');
-  footerEl.className = 'roi-footer';
-  footerEl.innerHTML = '<div class="roi-ft-inner">' +
-    '<div class="roi-ft-grid">' +
-      '<div class="roi-ft-brand-col">' +
-        '<div class="roi-ft-brand"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3"></div>' +
-        '<p class="roi-ft-tagline">Unlocking life-changing opportunities for young visionaries.</p>' +
-        '<p class="roi-ft-tagline" style="font-size:.72rem;">Chicago, IL</p>' +
-      '</div>' +
-      '<div class="roi-ft-col"><h4>Platform</h4>' +
-        '<a href="/for-students">For Students</a>' +
-        '<a href="/partner">For Institutions</a>' +
-        '<a href="/for-mentors">For Mentors</a>' +
-        '<a href="/download">Get the App</a>' +
-      '</div>' +
-      '<div class="roi-ft-col"><h4>About</h4>' +
-        '<a href="/about/about">Our Story</a>' +
-        '<a href="/about/in-the-press">In the Press</a>' +
-        '<a href="/about/partners">Partners</a>' +
-        '<a href="/scholarships">Scholarships</a>' +
-      '</div>' +
-      '<div class="roi-ft-col"><h4>Connect</h4>' +
-        '<a href="/about/contact">Contact Us</a>' +
-        '<a href="/donate">Donate</a>' +
-        '<a href="mailto:team@pulseofp3.org">team@pulseofp3.org</a>' +
-      '</div>' +
     '</div>' +
-    '<div class="roi-ft-bottom">' +
-      '<div class="roi-ft-copy">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</div>' +
-      '<div class="roi-ft-links">' +
-        '<a href="/app-privacy-policy">Privacy Policy</a>' +
-        '<a href="/app-terms-conditions">Terms &amp; Conditions</a>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
-  wrapper.appendChild(footerEl);
 
-  // ========== CALCULATION ENGINE ==========
+    // Assumptions disclaimer
+    '<div class="roi-assumptions"><strong>Assumptions &amp; Methodology</strong>' +
+      'Projections are estimates based on published research and P3 internal benchmarks. Retention lift is based on studies showing mentored students persist at 8\u201314% higher rates than unmentored peers (source: MENTOR National). A 50% attribution factor is applied to account for other institutional supports. \u201CTuition Saved\u201D reflects retained students who would otherwise have left, multiplied by the selected annual tuition. \u201CSavings vs. Traditional\u201D compares P3 per-student cost against the ~$500/student benchmark for traditional 1-on-1 mentorship programs (source: MENTOR Cost-Benefit Analysis). Actual results will vary based on implementation, student population, and institutional context. P3 recommends a pilot cohort to validate projected outcomes.</div>' +
+
+    '<a href="/" class="roi-back">&larr; Back to Home</a>' +
+    '</div></section>' +
+
+    // COMMUNITY GALLERY
+    '<section class="gl"><div class="ctn"><div class="gl-hd"><h2>The P3 community in action</h2><p>Mentorship moments, campus events, and career breakthroughs</p></div></div>' +
+    '<div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track">' + galleryTrack + '</div></div></section>';
+
+  // ========== INSERT INTO PAGE ==========
+  if (mainWrapper) {
+    // Insert before the footer (last element that wasn't hidden)
+    var footer = mainWrapper.querySelector('footer') || mainWrapper.querySelector('.footer-v2') || mainWrapper.querySelector('.footer');
+    if (footer) {
+      mainWrapper.insertBefore(container, footer);
+    } else {
+      mainWrapper.appendChild(container);
+    }
+  } else {
+    // Fallback: insert before the first footer in the body
+    var bodyFooter = document.querySelector('footer');
+    if (bodyFooter) {
+      bodyFooter.parentNode.insertBefore(container, bodyFooter);
+    } else {
+      document.body.appendChild(container);
+    }
+  }
+
+  // ========== CALCULATION ENGINE (v2 — attribution-adjusted) ==========
   var slider = document.getElementById('roi-sc');
   var sliderDisplay = document.getElementById('roi-sd');
   var plans = document.querySelectorAll('.roi-plan');
-
   var currentPlan = 'essential';
+  var itSelect = document.getElementById('roi-it');
+  var tuSelect = document.getElementById('roi-tu');
+
+  // Auto-link institution type to default tuition
+  var tuitionDefaults = {
+    '4-Year University': '25000',
+    'Community College': '5000',
+    'HBCU': '12000',
+    'K-12 District': '5000',
+    'Nonprofit / CBO': '5000'
+  };
+  if (itSelect) {
+    itSelect.addEventListener('change', function() {
+      var def = tuitionDefaults[itSelect.value];
+      if (def && tuSelect) {
+        tuSelect.value = def;
+      }
+      recalc();
+    });
+  }
 
   // Plan toggle
   plans.forEach(function(p) {
@@ -262,7 +240,7 @@
     });
   });
 
-  // Slider display
+  // Slider
   if (slider && sliderDisplay) {
     slider.addEventListener('input', function() {
       sliderDisplay.textContent = Number(slider.value).toLocaleString() + ' students';
@@ -270,57 +248,55 @@
     });
   }
 
-  // Recalculate on select change
-  ['roi-it', 'roi-tu', 'roi-mp'].forEach(function(id) {
+  // Other inputs (tuition and mentorship program — institution type handled above)
+  ['roi-tu', 'roi-mp'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener('change', recalc);
   });
 
   function recalc() {
     var students = Number(slider.value);
-    var tuition = Number(document.getElementById('roi-tu').value);
+    var tuition = Number(tuSelect.value);
     var program = document.getElementById('roi-mp').value;
     var planCost = currentPlan === 'premium' ? 25000 : 10000;
 
-    // Match rate varies by existing program
-    var matchRates = { none: 0.72, informal: 0.68, formal: 0.60, digital: 0.50 };
-    var matchRate = matchRates[program] || 0.72;
-    var matches = Math.round(students * matchRate);
-
-    // Retention lift varies by plan and program
-    var baseRetention = currentPlan === 'premium' ? 0.14 : 0.12;
+    // Retention lift (research-based: mentored students persist 8-14% higher)
+    var baseRetention = currentPlan === 'premium' ? 0.12 : 0.10;
     if (program === 'none') baseRetention += 0.02;
-    else if (program === 'digital') baseRetention -= 0.04;
-    var retained = Math.round(students * baseRetention);
+    else if (program === 'informal') baseRetention += 0.01;
+    else if (program === 'formal') baseRetention -= 0.01;
+    else if (program === 'digital') baseRetention -= 0.03;
 
-    // Revenue saved
-    var revenue = retained * tuition;
+    // Attribution factor: 50% discount for defensibility
+    var attribution = 0.50;
+    var adjustedRetention = baseRetention * attribution;
 
-    // Cost per student
+    // Calculate outputs
+    var retained = Math.round(students * adjustedRetention);
+    var tuitionSaved = retained * tuition;
     var costPerStudent = Math.round(planCost / students);
+    var roiRaw = tuitionSaved > 0 ? tuitionSaved / planCost : 0;
+    var roi = roiRaw < 10 ? (Math.round(roiRaw * 10) / 10) : Math.round(roiRaw);
 
-    // ROI
-    var roi = revenue > 0 ? Math.round(revenue / planCost) : 0;
+    // Program savings: P3 cost vs. traditional mentorship (~$500/student)
+    var traditionalCost = students * 500;
+    var programSavings = traditionalCost - planCost;
+    if (programSavings < 0) programSavings = 0;
 
-    // Format
     function fmtMoney(n) {
       if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
       if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
       return '$' + n;
     }
 
-    document.getElementById('roi-matches').textContent = matches.toLocaleString();
-    document.getElementById('roi-matches-d').textContent = 'at ' + Math.round(matchRate * 100) + '% match rate in 30 days';
-    document.getElementById('roi-retention').textContent = '+' + Math.round(baseRetention * 100) + '%';
-    document.getElementById('roi-retention-d').textContent = retained.toLocaleString() + ' students retained YoY';
-    document.getElementById('roi-revenue').textContent = fmtMoney(revenue);
-    document.getElementById('roi-revenue-d').textContent = 'retained students \u00d7 annual tuition value';
+    document.getElementById('roi-savings').textContent = fmtMoney(programSavings);
+    document.getElementById('roi-retention').textContent = '+' + Math.round(adjustedRetention * 100) + '%';
+    document.getElementById('roi-revenue').textContent = fmtMoney(tuitionSaved);
     document.getElementById('roi-cost').textContent = '$' + costPerStudent;
-    document.getElementById('roi-cost-d').textContent = 'vs. $500+ for traditional mentorship programs';
-    document.getElementById('roi-roi').textContent = roi + 'x';
+    document.getElementById('roi-roi').textContent = (roi % 1 === 0 ? roi : roi.toFixed(1)) + 'x';
   }
 
-  // Initial calc
+  // Initial calculation
   recalc();
 
 })();
