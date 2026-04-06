@@ -235,7 +235,7 @@
           '<div class="roi-metric"><div class="roi-metric-value" id="roi-revenue">$750K</div><div class="roi-metric-label">Tuition Saved</div></div>' +
           '<div class="roi-metric"><div class="roi-metric-value" id="roi-cost">$20</div><div class="roi-metric-label">Cost Per Student</div></div>' +
         '</div>' +
-        '<a href="https://calendly.com/alex-pulseofp3/30min" target="_blank" class="roi-cta">Schedule a Call &rarr;</a>' +
+        '<a href="https://calendar.app.google/HWHVSUkDqED55EXf7" target="_blank" class="roi-cta">Schedule a Call &rarr;</a>' +
       '</div>' +
 
     '</div>' +
