@@ -5,30 +5,52 @@
   fonts.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Satoshi:wght@400;500;600;700&display=swap';
   document.head.appendChild(fonts);
 
-  // ========== CSS (scoped with .roi- prefix) ==========
+  // ========== CSS ==========
   var css = document.createElement('style');
   css.textContent = [
     ':root{--roi-c:#D93A3A;--roi-ch:#c43232;--roi-m:#4a1020;--roi-md:#3a0c18;--roi-dk:#1a1a1a;--roi-wh:#fff;--roi-cream:#FAF6F1;--roi-lt:#6E6A66;--roi-mute:#999;--roi-hairline:#E6DED4;--roi-r:14px;--roi-tr:.3s cubic-bezier(.25,.46,.45,.94);--roi-fh:"Space Grotesk",sans-serif;--roi-fb:"Satoshi",sans-serif;--roi-fi:"Inter",sans-serif;}',
 
+    // Nav
+    '.p3-nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(58,12,24,0.85);backdrop-filter:blur(12px);transition:background .3s,box-shadow .3s;}',
+    '.p3-nav .p3-nav-logo{display:flex;align-items:center;text-decoration:none;}',
+    '.p3-nav .p3-nav-logo img{max-height:36px;width:auto;object-fit:contain;}',
+    '.p3-nav .p3-nav-links{display:flex;align-items:center;gap:28px;}',
+    '.p3-nav .p3-nav-link{font-family:var(--roi-fi);font-size:.85rem;font-weight:500;color:rgba(255,255,255,0.85);text-decoration:none;transition:color var(--roi-tr);}',
+    '.p3-nav .p3-nav-link:hover{color:var(--roi-wh);}',
+    '.p3-nav .p3-nav-cta{font-family:var(--roi-fb);font-size:.82rem;font-weight:600;color:var(--roi-wh);background:var(--roi-c);padding:9px 20px;border-radius:100px;text-decoration:none;transition:all var(--roi-tr);}',
+    '.p3-nav .p3-nav-cta:hover{background:var(--roi-ch);}',
+    '.p3-nav.scrolled{background:rgba(26,26,26,0.95)!important;backdrop-filter:blur(20px)!important;box-shadow:0 2px 20px rgba(0,0,0,0.15);}',
+    '@media(max-width:991px){.p3-nav{padding:16px;height:64px;}.p3-nav .p3-nav-links{display:none;}.p3-nav .p3-nav-cta{display:none;}.p3-nav .p3-nav-logo img{max-height:36px;height:36px;}}',
+
+    // Hamburger + mobile overlay
+    '.roi-hamburger{display:none;width:28px;height:28px;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;z-index:10001;position:relative;}',
+    '.roi-hamburger span{display:block;width:22px;height:2px;background:var(--roi-wh);border-radius:2px;transition:all .3s ease;}',
+    '@media(max-width:991px){.roi-hamburger{display:flex;}}',
+    '.roi-mobile-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,26,.98);z-index:10000;flex-direction:column;align-items:center;justify-content:center;gap:24px;}',
+    '.roi-mobile-overlay.open{display:flex;}',
+    '.roi-mobile-overlay a{font-family:var(--roi-fb);font-size:1.2rem;color:var(--roi-wh);text-decoration:none;padding:8px 24px;transition:color .3s;}',
+    '.roi-mobile-overlay a:hover{color:var(--roi-c);}',
+    '.roi-mobile-close{position:absolute;top:20px;right:20px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--roi-wh);background:none;border:none;}',
+
     // Hero header (burgundy)
-    '.roi-hero{padding:110px 28px 32px;background:linear-gradient(180deg,var(--roi-md) 0%,var(--roi-m) 100%);text-align:center;color:var(--roi-wh);}',
-    '.roi-tag{display:inline-block;padding:5px 14px;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);margin-bottom:14px;}',
-    '.roi-hero h1{font-family:var(--roi-fh);font-weight:700;font-size:clamp(1.8rem,3.5vw,2.5rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}',
-    '.roi-hero h1 .accent{color:var(--roi-c);}',
-    '.roi-hero p{font-size:clamp(.88rem,1.3vw,1rem);color:rgba(255,255,255,.55);max-width:520px;margin:0 auto;line-height:1.6;}',
+    '.roi-hero{padding:130px 28px 40px!important;background:linear-gradient(180deg,var(--roi-md) 0%,var(--roi-m) 100%)!important;text-align:center!important;color:var(--roi-wh)!important;}',
+    '.roi-tag{display:inline-block!important;padding:5px 14px;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.1)!important;color:rgba(255,255,255,.65)!important;margin-bottom:14px;}',
+    '.roi-hero h1{font-family:var(--roi-fh)!important;font-weight:700!important;font-size:clamp(1.8rem,3.5vw,2.5rem)!important;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;color:var(--roi-wh)!important;}',
+    '.roi-hero h1 .accent{color:var(--roi-c)!important;}',
+    '.roi-hero p{font-size:clamp(.88rem,1.3vw,1rem)!important;color:rgba(255,255,255,.55)!important;max-width:520px;margin:0 auto;line-height:1.6;}',
 
     // Calculator section (white bg)
-    '.roi-calc-section{padding:32px 28px 48px;background:var(--roi-wh);}',
+    '.roi-calc-section{padding:40px 28px 48px!important;background:var(--roi-wh)!important;}',
     '.roi-calc-inner{max-width:1060px;margin:0 auto;}',
 
     // Two-column grid
-    '.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--roi-hairline);border-radius:20px;overflow:hidden;background:var(--roi-wh);box-shadow:0 8px 40px -12px rgba(74,16,32,0.1);}',
+    '.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--roi-hairline);border-radius:20px;overflow:hidden;background:var(--roi-wh)!important;box-shadow:0 8px 40px -12px rgba(74,16,32,0.1);}',
     '@media(max-width:768px){.roi-grid{grid-template-columns:1fr;}}',
 
     // Left: Inputs
-    '.roi-inputs{padding:32px;background:var(--roi-wh);border-right:1px solid var(--roi-hairline);}',
+    '.roi-inputs{padding:32px;background:var(--roi-wh)!important;border-right:1px solid var(--roi-hairline);}',
     '@media(max-width:768px){.roi-inputs{border-right:none;border-bottom:1px solid var(--roi-hairline);}}',
-    '.roi-inputs h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk);margin-bottom:20px;display:flex;align-items:center;gap:8px;}',
+    '.roi-inputs h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk)!important;margin-bottom:20px;display:flex;align-items:center;gap:8px;}',
     '.roi-inputs h3::before{content:"";width:4px;height:18px;background:var(--roi-c);border-radius:2px;}',
     '.roi-group{margin-bottom:16px;}',
     '.roi-label{font-size:.78rem;font-weight:600;color:var(--roi-lt);margin-bottom:6px;}',
@@ -53,8 +75,8 @@
     '.roi-plan-desc{font-size:.72rem;color:var(--roi-lt);line-height:1.4;}',
 
     // Right: Results
-    '.roi-results{padding:32px;background:#FAFAF8;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}',
-    '.roi-results h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk);margin-bottom:24px;}',
+    '.roi-results{padding:32px;background:#FAFAF8!important;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}',
+    '.roi-results h3{font-family:var(--roi-fh);font-size:1rem;font-weight:700;color:var(--roi-dk)!important;margin-bottom:24px;}',
     '.roi-highlight{margin-bottom:24px;}',
     '.roi-big-num{font-family:var(--roi-fh);font-size:clamp(3rem,6vw,4.5rem);font-weight:700;color:var(--roi-c);line-height:1;}',
     '.roi-big-label{font-size:.82rem;color:var(--roi-mute);margin-top:4px;font-weight:500;}',
@@ -62,7 +84,7 @@
     '.roi-metric{text-align:center;padding:14px 8px;background:var(--roi-wh);border:1px solid var(--roi-hairline);border-radius:12px;}',
     '.roi-metric-value{font-family:var(--roi-fh);font-size:1.4rem;font-weight:700;color:var(--roi-dk);line-height:1.1;}',
     '.roi-metric-label{font-size:.7rem;color:var(--roi-mute);font-weight:500;margin-top:4px;line-height:1.3;}',
-    '.roi-cta{display:inline-block;padding:13px 32px;border-radius:100px;font-family:var(--roi-fb);font-size:.88rem;font-weight:600;color:var(--roi-wh);background:var(--roi-c);text-decoration:none;transition:all var(--roi-tr);box-shadow:0 4px 14px rgba(217,58,58,.25);}',
+    '.roi-cta{display:inline-block;padding:13px 32px;border-radius:100px;font-family:var(--roi-fb);font-size:.88rem;font-weight:600;color:var(--roi-wh)!important;background:var(--roi-c);text-decoration:none;transition:all var(--roi-tr);box-shadow:0 4px 14px rgba(217,58,58,.25);}',
     '.roi-cta:hover{background:var(--roi-ch);transform:translateY(-1px);}',
 
     // Assumptions disclaimer
@@ -74,10 +96,10 @@
     '.roi-back:hover{color:var(--roi-c);}',
 
     // Community gallery
-    '.gl{padding:40px 0;background:var(--roi-dk);overflow:hidden;}',
+    '.gl{padding:40px 0;background:var(--roi-dk)!important;overflow:hidden;}',
     '.gl .ctn{max-width:1200px;margin:0 auto;padding:0 28px;}',
     '.gl-hd{text-align:center;margin-bottom:24px;}',
-    '.gl-hd h2{color:var(--roi-wh);margin-bottom:6px;font-size:clamp(1.3rem,2.5vw,1.8rem);font-family:var(--roi-fh);font-weight:700;line-height:1.15;letter-spacing:-.02em;}',
+    '.gl-hd h2{color:var(--roi-wh)!important;margin-bottom:6px;font-size:clamp(1.3rem,2.5vw,1.8rem);font-family:var(--roi-fh);font-weight:700;line-height:1.15;letter-spacing:-.02em;}',
     '.gl-hd p{color:rgba(255,255,255,.45);font-size:.85rem;}',
     '.gl-wrap{position:relative;overflow:hidden;}',
     '.gl-track{display:flex;gap:12px;animation:gl-s 40s linear infinite;width:max-content;}',
@@ -87,27 +109,65 @@
     '.gl-fl,.gl-fr{position:absolute;top:0;bottom:0;width:50px;z-index:2;pointer-events:none;}',
     '.gl-fl{left:0;background:linear-gradient(90deg,var(--roi-dk),transparent);}',
     '.gl-fr{right:0;background:linear-gradient(-90deg,var(--roi-dk),transparent);}',
-    '@keyframes gl-s{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}'
+    '@keyframes gl-s{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}',
+
+    // Footer
+    '.roi-footer{background:var(--roi-dk)!important;color:var(--roi-wh);padding:40px 0 20px;font-family:var(--roi-fb);}',
+    '.roi-ft-inner{max-width:1100px;margin:0 auto;padding:0 28px;}',
+    '.roi-ft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;margin-bottom:28px;}',
+    '.roi-ft-brand img{height:28px;margin-bottom:12px;}',
+    '.roi-ft-tagline{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.55;margin-bottom:12px;}',
+    '.roi-ft-col h4{font-family:var(--roi-fh);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px;}',
+    '.roi-ft-col a{display:block;font-size:.82rem;color:rgba(255,255,255,.6);text-decoration:none;padding:3px 0;transition:color var(--roi-tr);}',
+    '.roi-ft-col a:hover{color:var(--roi-wh);}',
+    '.roi-ft-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}',
+    '.roi-ft-copy{font-size:.72rem;color:rgba(255,255,255,.3);}',
+    '.roi-ft-links{display:flex;gap:16px;}',
+    '.roi-ft-links a{font-size:.72rem;color:rgba(255,255,255,.3);text-decoration:none;}',
+    '.roi-ft-links a:hover{color:rgba(255,255,255,.6);}',
+    '@media(max-width:768px){.roi-ft-grid{grid-template-columns:1fr 1fr;}}',
+    '@media(max-width:480px){.roi-ft-grid{grid-template-columns:1fr;}}'
   ].join('\n');
   document.head.appendChild(css);
 
-  // ========== FIND INSERTION POINT ==========
-  // The Webflow page has a native navbar and footer. We inject BETWEEN them.
-  // Hide any existing main-wrapper content (the old calculator) and insert ours.
-  var mainWrapper = document.querySelector('.main-wrapper');
-  if (mainWrapper) {
-    // Hide all children except the Webflow navbar (first child) and footer
-    var children = Array.from(mainWrapper.children);
-    children.forEach(function(child) {
-      // Keep Webflow nav and footer; hide everything else
-      var tag = child.tagName.toLowerCase();
-      var isNav = tag === 'nav' || child.classList.contains('w-nav') || child.getAttribute('data-collapse') === 'medium';
-      var isFooter = tag === 'footer' || child.classList.contains('footer-v2') || child.classList.contains('footer');
-      if (!isNav && !isFooter) {
-        child.style.display = 'none';
-      }
-    });
+  // ========== RENDER NAVBAR ==========
+  var nav = document.createElement('nav');
+  nav.className = 'p3-nav';
+  nav.innerHTML =
+    '<a href="/" class="p3-nav-logo"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="Pulse of Perseverance" /></a>' +
+    '<div class="p3-nav-links">' +
+      '<a href="/for-students" class="p3-nav-link">For Students</a>' +
+      '<a href="/partner" class="p3-nav-link">For Institutions</a>' +
+      '<a href="/for-mentors" class="p3-nav-link">For Mentors</a>' +
+      '<a href="/about/about" class="p3-nav-link">About</a>' +
+    '</div>' +
+    '<a href="/download" class="p3-nav-cta">Get the App</a>' +
+    '<div class="roi-hamburger"><span></span><span></span><span></span></div>';
+  document.body.insertBefore(nav, document.body.firstChild);
+
+  // Scroll darken effect
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 40) { nav.classList.add('scrolled'); }
+    else { nav.classList.remove('scrolled'); }
+  });
+
+  // Mobile overlay
+  var overlay = document.createElement('div');
+  overlay.className = 'roi-mobile-overlay';
+  overlay.innerHTML = '<button class="roi-mobile-close">&times;</button>' +
+    '<a href="/">Home</a>' +
+    '<a href="/for-students">For Students</a>' +
+    '<a href="/partner">For Institutions</a>' +
+    '<a href="/for-mentors">For Mentors</a>' +
+    '<a href="/about/about">About</a>' +
+    '<a href="/download" style="background:var(--roi-c);border-radius:100px;padding:12px 28px;font-weight:600;">Get the App</a>';
+  document.body.appendChild(overlay);
+
+  var hamburger = nav.querySelector('.roi-hamburger');
+  if (hamburger) {
+    hamburger.addEventListener('click', function() { overlay.classList.add('open'); });
   }
+  overlay.querySelector('.roi-mobile-close').addEventListener('click', function() { overlay.classList.remove('open'); });
 
   // ========== GALLERY IMAGE IDs ==========
   var galleryIds = [
@@ -123,10 +183,9 @@
   var galleryItems = galleryIds.map(function(id) {
     return '<div class="gl-item"><img src="https://drive.google.com/thumbnail?id=' + id + '&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>';
   });
-  // Duplicate for seamless loop
   var galleryTrack = galleryItems.concat(galleryItems).join('');
 
-  // ========== BUILD HTML ==========
+  // ========== BUILD PAGE CONTENT ==========
   var container = document.createElement('div');
   container.className = 'roi-redesign-wrapper';
   container.innerHTML =
@@ -162,7 +221,7 @@
       // Right: Results
       '<div class="roi-results">' +
         '<h3>Your Projected Impact</h3>' +
-        '<div class="roi-highlight"><div class="roi-big-num" id="roi-roi">15x</div><div class="roi-big-label">estimated return on investment</div></div>' +
+        '<div class="roi-highlight"><div class="roi-big-num" id="roi-roi">75x</div><div class="roi-big-label">estimated return on investment</div></div>' +
         '<div class="roi-metrics">' +
           '<div class="roi-metric"><div class="roi-metric-value" id="roi-savings">$240K</div><div class="roi-metric-label">Savings vs. Traditional</div></div>' +
           '<div class="roi-metric"><div class="roi-metric-value" id="roi-retention">+6%</div><div class="roi-metric-label">Retention Lift</div></div>' +
@@ -186,23 +245,45 @@
     '<div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track">' + galleryTrack + '</div></div></section>';
 
   // ========== INSERT INTO PAGE ==========
-  if (mainWrapper) {
-    // Insert before the footer (last element that wasn't hidden)
-    var footer = mainWrapper.querySelector('footer') || mainWrapper.querySelector('.footer-v2') || mainWrapper.querySelector('.footer');
-    if (footer) {
-      mainWrapper.insertBefore(container, footer);
-    } else {
-      mainWrapper.appendChild(container);
-    }
-  } else {
-    // Fallback: insert before the first footer in the body
-    var bodyFooter = document.querySelector('footer');
-    if (bodyFooter) {
-      bodyFooter.parentNode.insertBefore(container, bodyFooter);
-    } else {
-      document.body.appendChild(container);
-    }
-  }
+  document.body.appendChild(container);
+
+  // ========== RENDER FOOTER ==========
+  var footerEl = document.createElement('footer');
+  footerEl.className = 'roi-footer';
+  footerEl.innerHTML = '<div class="roi-ft-inner">' +
+    '<div class="roi-ft-grid">' +
+      '<div>' +
+        '<div class="roi-ft-brand"><img src="https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg" alt="P3"></div>' +
+        '<p class="roi-ft-tagline">Unlocking life-changing opportunities for young visionaries.</p>' +
+        '<p class="roi-ft-tagline" style="font-size:.72rem;">Chicago, IL</p>' +
+      '</div>' +
+      '<div class="roi-ft-col"><h4>Platform</h4>' +
+        '<a href="/for-students">For Students</a>' +
+        '<a href="/partner">For Institutions</a>' +
+        '<a href="/for-mentors">For Mentors</a>' +
+        '<a href="/download">Get the App</a>' +
+      '</div>' +
+      '<div class="roi-ft-col"><h4>About</h4>' +
+        '<a href="/about/about">Our Story</a>' +
+        '<a href="/about/in-the-press">In the Press</a>' +
+        '<a href="/about/partners">Partners</a>' +
+        '<a href="/scholarships">Scholarships</a>' +
+      '</div>' +
+      '<div class="roi-ft-col"><h4>Connect</h4>' +
+        '<a href="/about/contact">Contact Us</a>' +
+        '<a href="/donate">Donate</a>' +
+        '<a href="mailto:team@pulseofp3.org">team@pulseofp3.org</a>' +
+      '</div>' +
+    '</div>' +
+    '<div class="roi-ft-bottom">' +
+      '<div class="roi-ft-copy">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</div>' +
+      '<div class="roi-ft-links">' +
+        '<a href="/app-privacy-policy">Privacy Policy</a>' +
+        '<a href="/app-terms-conditions">Terms &amp; Conditions</a>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+  document.body.appendChild(footerEl);
 
   // ========== CALCULATION ENGINE (v2 — attribution-adjusted) ==========
   var slider = document.getElementById('roi-sc');
@@ -248,7 +329,7 @@
     });
   }
 
-  // Other inputs (tuition and mentorship program — institution type handled above)
+  // Other inputs
   ['roi-tu', 'roi-mp'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener('change', recalc);
