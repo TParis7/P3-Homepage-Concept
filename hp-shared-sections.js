@@ -769,49 +769,51 @@
 
   // JS: Force pill-shape + centered on dual CTA card buttons (CSS alone is outfought by Webflow compiled rules)
   function pillifyDualCtaBtns(){
-    var cards = document.querySelectorAll('.p3-dual-cta .p3-cta-card');
-    cards.forEach(function(card){
-      // Shrink any wrapper between card and anchor
-      card.querySelectorAll('a').forEach(function(a){
-        // Collapse EVERY wrapper between anchor and card
-        var p = a.parentElement;
-        while (p && p !== card && p !== document.body) {
-          p.style.setProperty('width','auto','important');
-          p.style.setProperty('max-width','fit-content','important');
-          p.style.setProperty('margin-left','auto','important');
-          p.style.setProperty('margin-right','auto','important');
+    var dc = document.querySelector('.p3-dual-cta');
+    if (!dc) return;
+    // Hit EVERY anchor inside the dual-CTA section — no matter the card class.
+    dc.querySelectorAll('a').forEach(function(a){
+      // Only treat pill buttons (skip small text links — they have no padding/bg). We detect by checking if it's a .p3-btn-* or .w-button, OR if it already has visible padding/background.
+      var cls = a.className || '';
+      var isBtn = /p3-btn|w-button|btn-/.test(cls) || a.textContent.trim().length < 40;
+      if (!isBtn) return;
+
+      // Collapse EVERY wrapper between anchor and the dual-cta section
+      var p = a.parentElement;
+      while (p && p !== dc && p !== document.body) {
+        p.style.setProperty('width','auto','important');
+        p.style.setProperty('max-width','100%','important');
+        p.style.setProperty('text-align','center','important');
+        // Only flex-wrap if this ancestor directly contains the anchor
+        if (p.contains(a) && (p.children.length <= 3)) {
           p.style.setProperty('display','flex','important');
-          p.style.setProperty('justify-content','center','important');
+          p.style.setProperty('flex-direction','column','important');
           p.style.setProperty('align-items','center','important');
-          p.style.setProperty('text-align','center','important');
-          p.style.setProperty('flex','0 0 auto','important');
-          p = p.parentElement;
+          p.style.setProperty('justify-content','center','important');
         }
-        // Force pill shape on the anchor — brute-force fixed width to match Learn More
-        a.style.setProperty('padding','12px 26px','important');
-        a.style.setProperty('border-radius','50px','important');
-        a.style.setProperty('font-size','14px','important');
-        a.style.setProperty('font-weight','600','important');
-        a.style.setProperty('display','inline-flex','important');
-        a.style.setProperty('align-items','center','important');
-        a.style.setProperty('justify-content','center','important');
-        a.style.setProperty('gap','8px','important');
-        a.style.setProperty('width','fit-content','important');
-        a.style.setProperty('max-width','fit-content','important');
-        a.style.setProperty('min-width','0','important');
-        a.style.setProperty('flex','0 0 auto','important');
-        a.style.setProperty('flex-grow','0','important');
-        a.style.setProperty('flex-shrink','0','important');
-        a.style.setProperty('align-self','center','important');
-        a.style.setProperty('margin-left','auto','important');
-        a.style.setProperty('margin-right','auto','important');
-        a.style.setProperty('white-space','nowrap','important');
-        a.style.setProperty('box-sizing','border-box','important');
-      });
-      // Force card itself to column+center so button doesn't stretch
-      card.style.setProperty('display','flex','important');
-      card.style.setProperty('flex-direction','column','important');
-      card.style.setProperty('align-items','center','important');
+        p = p.parentElement;
+      }
+
+      // Force pill shape on the anchor — fit-content width locks it to text+padding
+      a.style.setProperty('padding','12px 26px','important');
+      a.style.setProperty('border-radius','50px','important');
+      a.style.setProperty('font-size','14px','important');
+      a.style.setProperty('font-weight','600','important');
+      a.style.setProperty('display','inline-flex','important');
+      a.style.setProperty('align-items','center','important');
+      a.style.setProperty('justify-content','center','important');
+      a.style.setProperty('gap','8px','important');
+      a.style.setProperty('width','fit-content','important');
+      a.style.setProperty('max-width','fit-content','important');
+      a.style.setProperty('min-width','0','important');
+      a.style.setProperty('flex','0 0 auto','important');
+      a.style.setProperty('flex-grow','0','important');
+      a.style.setProperty('flex-shrink','0','important');
+      a.style.setProperty('align-self','center','important');
+      a.style.setProperty('margin-left','auto','important');
+      a.style.setProperty('margin-right','auto','important');
+      a.style.setProperty('white-space','nowrap','important');
+      a.style.setProperty('box-sizing','border-box','important');
     });
   }
   pillifyDualCtaBtns();
