@@ -619,30 +619,38 @@
   ].join('\n');
   document.head.appendChild(v12css);
 
-  // ── v1.2.1 PATCHES (Apr 15, 2026) ──
+  // ── v1.2.1 PATCHES (Apr 15, 2026) — selectors updated to match real Webflow classes ──
   var v121css = document.createElement('style');
   v121css.textContent = [
-    // Why Now card padding reduction
-    '.p3-gap-card{padding:20px 22px !important;}',
-    '@media(max-width:768px){.p3-gap-card{padding:16px 18px !important;}}',
+    // Why Now card padding — higher specificity to beat Webflow default (.p3-section-maroon .p3-gap-card)
+    'section .p3-gap-card, .p3-section-maroon .p3-gap-card, div.p3-gap-card{padding:20px 22px !important;}',
+    '@media(max-width:768px){section .p3-gap-card, .p3-section-maroon .p3-gap-card, div.p3-gap-card{padding:16px 18px !important;}}',
 
     // Export PDF — force single line on mobile
     '.p3dpv-export{white-space:nowrap !important;flex-shrink:0 !important;}',
     '@media(max-width:640px){.p3dpv-export{font-size:9.5px !important;padding:4px 8px !important;}}',
 
-    // Dashboard Preview card body copy — harmonize with other page cards (14px base)
+    // Dashboard Preview card body copy — harmonize with other page cards
     '.p3dp-card p{font-size:13px !important;line-height:1.55 !important;}',
     '.p3dp-card h4{font-size:15px !important;}',
     '@media(max-width:640px){.p3dp-card p{font-size:12.5px !important;} .p3dp-card h4{font-size:14px !important;}}',
 
-    // Gallery subheader — match lede/sub sizing across page (15px / 1.55)
+    // Gallery subheader
     '.gl-hd p{font-size:15px !important;line-height:1.55 !important;color:rgba(255,255,255,0.55) !important;}',
     '@media(max-width:640px){.gl-hd p{font-size:13.5px !important;}}',
 
-    // Hide feature-bullet lists inside the two bottom CTA cards
-    // (AI Matching / Career Pathways / 100% Free  +  Outcome Tracking / Cohort Analytics / ROI Reports)
-    '.p3-cta-card ul, .p3-cta-card .p3-cta-features, .p3-cta-card .p3-feature-list{display:none !important;}',
-    '.p3-cta-card-bullets-hide{display:none !important;}'
+    // Hide feature-bullet pills in the two bottom Dual CTA cards
+    // Real Webflow classes: .p3-dual-features wrapper > .p3-dual-feat-tag pills
+    '.p3-dual-card-students .p3-dual-features, .p3-dual-card-partners .p3-dual-features, .p3-dual-features{display:none !important;}',
+    '.p3-dual-feat-tag{display:none !important;}',
+
+    // "In The Press" eyebrow — Webflow class is .p3-tag-crimson (with hyphen); override directly
+    '.p3-section-tag.p3-tag-crimson, div.p3-section-tag.p3-tag-crimson, .p3-social-proof .p3-section-tag{',
+    '  background:rgba(255,255,255,0.14) !important;',
+    '  color:#ffffff !important;',
+    '  border:1px solid rgba(255,255,255,0.18) !important;',
+    '}',
+    '.p3-section-tag.p3-tag-crimson *, .p3-social-proof .p3-section-tag *{color:#ffffff !important;}'
   ].join('\n');
   document.head.appendChild(v121css);
 
