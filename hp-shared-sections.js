@@ -773,18 +773,21 @@
     cards.forEach(function(card){
       // Shrink any wrapper between card and anchor
       card.querySelectorAll('a').forEach(function(a){
-        // Parent wrapper collapse
+        // Collapse EVERY wrapper between anchor and card
         var p = a.parentElement;
-        if (p && p !== card && p.children.length <= 2) {
+        while (p && p !== card && p !== document.body) {
           p.style.setProperty('width','auto','important');
-          p.style.setProperty('max-width','max-content','important');
+          p.style.setProperty('max-width','fit-content','important');
           p.style.setProperty('margin-left','auto','important');
           p.style.setProperty('margin-right','auto','important');
-          p.style.setProperty('display','inline-flex','important');
+          p.style.setProperty('display','flex','important');
           p.style.setProperty('justify-content','center','important');
+          p.style.setProperty('align-items','center','important');
           p.style.setProperty('text-align','center','important');
+          p.style.setProperty('flex','0 0 auto','important');
+          p = p.parentElement;
         }
-        // Force pill shape on the anchor
+        // Force pill shape on the anchor — brute-force fixed width to match Learn More
         a.style.setProperty('padding','12px 26px','important');
         a.style.setProperty('border-radius','50px','important');
         a.style.setProperty('font-size','14px','important');
@@ -793,9 +796,12 @@
         a.style.setProperty('align-items','center','important');
         a.style.setProperty('justify-content','center','important');
         a.style.setProperty('gap','8px','important');
-        a.style.setProperty('width','auto','important');
-        a.style.setProperty('max-width','max-content','important');
+        a.style.setProperty('width','fit-content','important');
+        a.style.setProperty('max-width','fit-content','important');
         a.style.setProperty('min-width','0','important');
+        a.style.setProperty('flex','0 0 auto','important');
+        a.style.setProperty('flex-grow','0','important');
+        a.style.setProperty('flex-shrink','0','important');
         a.style.setProperty('align-self','center','important');
         a.style.setProperty('margin-left','auto','important');
         a.style.setProperty('margin-right','auto','important');
