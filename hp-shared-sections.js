@@ -448,20 +448,30 @@
 
     // ── A) UNIVERSAL EYEBROW PILL ──
     // Base pill: applies to every .p3-section-tag on the page
-    '.p3-section-tag{',
-    '  display:inline-block !important;',
-    '  padding:6px 16px !important;',
-    '  border-radius:50px !important;',
+    // Uses inline-flex + max-content to prevent Webflow's block-level stretch on desktop
+    '.p3-section-tag, .p3-section-tag *{',
     '  font-family:"Inter",system-ui,sans-serif !important;',
     '  font-size:12px !important;',
-    '  font-weight:600 !important;',
+    '  font-weight:500 !important;',
     '  letter-spacing:1px !important;',
     '  text-transform:uppercase !important;',
     '  line-height:1.4 !important;',
-    '  margin-bottom:16px !important;',
-    '  width:auto !important;',
-    '  border:none !important;',
     '}',
+    '.p3-section-tag{',
+    '  display:inline-flex !important;',
+    '  align-items:center !important;',
+    '  padding:6px 16px !important;',
+    '  border-radius:50px !important;',
+    '  margin-bottom:16px !important;',
+    '  width:max-content !important;',
+    '  max-width:max-content !important;',
+    '  min-width:0 !important;',
+    '  border:none !important;',
+    '  box-sizing:border-box !important;',
+    '  height:auto !important;',
+    '}',
+    // If parent container is text-align:center, keep pill centered instead of flush left
+    '.p3-section-tag{margin-left:0 !important;margin-right:0 !important;}',
     // Light variant — for sections with light backgrounds (Why Now, Platform rebuilt, Outcomes, Pipeline, ROI, Press, For Students CTA)
     '.p3-section-tag.p3tag-light{',
     '  background:rgba(217,58,58,0.10) !important;',
@@ -608,6 +618,68 @@
     '}'
   ].join('\n');
   document.head.appendChild(v12css);
+
+  // ── v1.2.1 PATCHES (Apr 15, 2026) ──
+  var v121css = document.createElement('style');
+  v121css.textContent = [
+    // Why Now card padding reduction
+    '.p3-gap-card{padding:20px 22px !important;}',
+    '@media(max-width:768px){.p3-gap-card{padding:16px 18px !important;}}',
+
+    // Export PDF — force single line on mobile
+    '.p3dpv-export{white-space:nowrap !important;flex-shrink:0 !important;}',
+    '@media(max-width:640px){.p3dpv-export{font-size:9.5px !important;padding:4px 8px !important;}}',
+
+    // Dashboard Preview card body copy — harmonize with other page cards (14px base)
+    '.p3dp-card p{font-size:13px !important;line-height:1.55 !important;}',
+    '.p3dp-card h4{font-size:15px !important;}',
+    '@media(max-width:640px){.p3dp-card p{font-size:12.5px !important;} .p3dp-card h4{font-size:14px !important;}}',
+
+    // Gallery subheader — match lede/sub sizing across page (15px / 1.55)
+    '.gl-hd p{font-size:15px !important;line-height:1.55 !important;color:rgba(255,255,255,0.55) !important;}',
+    '@media(max-width:640px){.gl-hd p{font-size:13.5px !important;}}',
+
+    // Hide feature-bullet lists inside the two bottom CTA cards
+    // (AI Matching / Career Pathways / 100% Free  +  Outcome Tracking / Cohort Analytics / ROI Reports)
+    '.p3-cta-card ul, .p3-cta-card .p3-cta-features, .p3-cta-card .p3-feature-list{display:none !important;}',
+    '.p3-cta-card-bullets-hide{display:none !important;}'
+  ].join('\n');
+  document.head.appendChild(v121css);
+
+  // JS: Force "In The Press" eyebrow to maroon variant (low-contrast otherwise)
+  // Also hide feature-bullet rows in bottom CTA cards by text match (defensive if no list class)
+  (function v121Patches() {
+    // Force press eyebrow colors after A) runs below — we'll run again post-harmonize
+    setTimeout(function() {
+      var tags = document.querySelectorAll('.p3-section-tag');
+      tags.forEach(function(t) {
+        var txt = (t.textContent || '').trim().toLowerCase();
+        if (txt === 'in the press' || txt === 'in press') {
+          t.classList.remove('p3tag-light');
+          t.classList.add('p3tag-maroon');
+        }
+      });
+    }, 0);
+
+    // Remove bullet strings from the bottom CTA cards
+    var bulletStrings = [
+      'AI Matching','Career Pathways','100% Free',
+      'Outcome Tracking','Cohort Analytics','ROI Reports'
+    ];
+    var ctaCards = document.querySelectorAll('.p3-cta-card');
+    ctaCards.forEach(function(card) {
+      // Find any descendant whose trimmed textContent is one of the bullet strings — walk up to row container and hide
+      var all = card.querySelectorAll('*');
+      all.forEach(function(el) {
+        var t = (el.textContent || '').trim();
+        if (bulletStrings.indexOf(t) !== -1 && el.children.length === 0) {
+          // hide the immediate wrapper (likely a flex row with icon + label)
+          var row = el.closest('li, .p3-feature-row, .p3-cta-feature, [class*="feature"]') || el.parentElement;
+          if (row) row.classList.add('p3-cta-card-bullets-hide');
+        }
+      });
+    });
+  })();
 
   // ── A) Eyebrow harmonization (JS: tag maroon vs light) ──
   (function harmonizeEyebrows() {
