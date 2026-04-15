@@ -622,9 +622,9 @@
   // ── v1.2.1 PATCHES (Apr 15, 2026) — selectors updated to match real Webflow classes ──
   var v121css = document.createElement('style');
   v121css.textContent = [
-    // Why Now card padding — higher specificity to beat Webflow default (.p3-section-maroon .p3-gap-card)
-    'section .p3-gap-card, .p3-section-maroon .p3-gap-card, div.p3-gap-card{padding:20px 22px !important;}',
-    '@media(max-width:768px){section .p3-gap-card, .p3-section-maroon .p3-gap-card, div.p3-gap-card{padding:16px 18px !important;}}',
+    // Why Now card padding — MAX specificity (html body + stacked classes) to beat Webflow + other P3 scripts
+    'html body .p3-gap-card, html body div.p3-gap-card, html body section .p3-gap-card{padding:20px 22px !important;}',
+    '@media(max-width:768px){html body .p3-gap-card, html body div.p3-gap-card, html body section .p3-gap-card{padding:16px 18px !important;}}',
 
     // Export PDF — force single line on mobile
     '.p3dpv-export{white-space:nowrap !important;flex-shrink:0 !important;}',
@@ -644,13 +644,19 @@
     '.p3-dual-card-students .p3-dual-features, .p3-dual-card-partners .p3-dual-features, .p3-dual-features{display:none !important;}',
     '.p3-dual-feat-tag{display:none !important;}',
 
-    // "In The Press" eyebrow — Webflow class is .p3-tag-crimson (with hyphen); override directly
-    '.p3-section-tag.p3-tag-crimson, div.p3-section-tag.p3-tag-crimson, .p3-social-proof .p3-section-tag{',
-    '  background:rgba(255,255,255,0.14) !important;',
+    // "In The Press" eyebrow — Press section has LIGHT peach background, so use SOLID crimson pill with white text for strong contrast
+    'html body .p3-section-tag.p3-tag-crimson, html body .p3-social-proof .p3-section-tag{',
+    '  background:#D93A3A !important;',
+    '  background-color:#D93A3A !important;',
     '  color:#ffffff !important;',
-    '  border:1px solid rgba(255,255,255,0.18) !important;',
+    '  border:none !important;',
     '}',
-    '.p3-section-tag.p3-tag-crimson *, .p3-social-proof .p3-section-tag *{color:#ffffff !important;}'
+    'html body .p3-section-tag.p3-tag-crimson *, html body .p3-social-proof .p3-section-tag *{color:#ffffff !important;background:transparent !important;}',
+
+    // Dashboard Preview card headings — MAX specificity so h4 is clearly bigger/bolder than paragraph
+    'html body .p3dp-card h4{font-size:17px !important;font-weight:700 !important;margin-bottom:6px !important;line-height:1.25 !important;}',
+    'html body .p3dp-card p{font-size:13px !important;line-height:1.55 !important;}',
+    '@media(max-width:640px){html body .p3dp-card h4{font-size:16px !important;} html body .p3dp-card p{font-size:12.5px !important;}}'
   ].join('\n');
   document.head.appendChild(v121css);
 
