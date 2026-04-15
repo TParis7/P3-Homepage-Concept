@@ -734,11 +734,18 @@
 
     // ── Dual CTA buttons: pill-shaped like Learn More, centered ──
     'html body .p3-dual-cta .p3-cta-card{align-items:center !important;text-align:center !important;}',
-    'html body .p3-dual-cta .p3-cta-card a.p3-btn-primary, html body .p3-dual-cta .p3-cta-card a.p3-btn-light, html body .p3-dual-cta .p3-cta-card a.p3-btn-ghost, html body .p3-dual-cta .p3-cta-card a.w-button, html body .p3-dual-cta .p3-cta-card a.btn, html body .p3-dual-cta .p3-cta-card a[class*="btn"]{',
+    // Collapse any wrapper divs around the buttons (Webflow often wraps in a 100%-width div)
+    'html body .p3-dual-cta .p3-cta-card > div:has(> a), html body .p3-dual-cta .p3-cta-card .p3-btn-wrap, html body .p3-dual-cta .p3-cta-card .button-wrap, html body .p3-dual-cta .p3-cta-card .p3-cta-actions{',
+    '  width:auto !important;max-width:max-content !important;margin-left:auto !important;margin-right:auto !important;text-align:center !important;',
+    '  display:inline-flex !important;justify-content:center !important;',
+    '}',
+    // The button itself — hit ANY anchor descendant inside a dual-cta card
+    'html body .p3-dual-cta .p3-cta-card a, html body .p3-dual-cta .p3-cta-card a.w-button, html body .p3-dual-cta .p3-cta-card a[class*="btn"]{',
     '  padding:12px 26px !important;border-radius:50px !important;font-size:14px !important;font-weight:600 !important;',
     '  display:inline-flex !important;align-items:center !important;justify-content:center !important;gap:8px !important;',
     '  width:auto !important;max-width:max-content !important;min-width:0 !important;align-self:center !important;',
     '  margin-left:auto !important;margin-right:auto !important;',
+    '  box-sizing:border-box !important;white-space:nowrap !important;',
     '}',
 
     // ── Community gallery restyle → match FS "Join +800 Students Nationwide" exactly ──
@@ -759,6 +766,52 @@
     '}'
   ].join('\n');
   document.head.appendChild(v122css);
+
+  // JS: Force pill-shape + centered on dual CTA card buttons (CSS alone is outfought by Webflow compiled rules)
+  function pillifyDualCtaBtns(){
+    var cards = document.querySelectorAll('.p3-dual-cta .p3-cta-card');
+    cards.forEach(function(card){
+      // Shrink any wrapper between card and anchor
+      card.querySelectorAll('a').forEach(function(a){
+        // Parent wrapper collapse
+        var p = a.parentElement;
+        if (p && p !== card && p.children.length <= 2) {
+          p.style.setProperty('width','auto','important');
+          p.style.setProperty('max-width','max-content','important');
+          p.style.setProperty('margin-left','auto','important');
+          p.style.setProperty('margin-right','auto','important');
+          p.style.setProperty('display','inline-flex','important');
+          p.style.setProperty('justify-content','center','important');
+          p.style.setProperty('text-align','center','important');
+        }
+        // Force pill shape on the anchor
+        a.style.setProperty('padding','12px 26px','important');
+        a.style.setProperty('border-radius','50px','important');
+        a.style.setProperty('font-size','14px','important');
+        a.style.setProperty('font-weight','600','important');
+        a.style.setProperty('display','inline-flex','important');
+        a.style.setProperty('align-items','center','important');
+        a.style.setProperty('justify-content','center','important');
+        a.style.setProperty('gap','8px','important');
+        a.style.setProperty('width','auto','important');
+        a.style.setProperty('max-width','max-content','important');
+        a.style.setProperty('min-width','0','important');
+        a.style.setProperty('align-self','center','important');
+        a.style.setProperty('margin-left','auto','important');
+        a.style.setProperty('margin-right','auto','important');
+        a.style.setProperty('white-space','nowrap','important');
+        a.style.setProperty('box-sizing','border-box','important');
+      });
+      // Force card itself to column+center so button doesn't stretch
+      card.style.setProperty('display','flex','important');
+      card.style.setProperty('flex-direction','column','important');
+      card.style.setProperty('align-items','center','important');
+    });
+  }
+  pillifyDualCtaBtns();
+  setTimeout(pillifyDualCtaBtns, 300);
+  setTimeout(pillifyDualCtaBtns, 1200);
+  window.addEventListener('load', pillifyDualCtaBtns);
 
   // JS: Force "In The Press" eyebrow to maroon variant (low-contrast otherwise)
   // Also hide feature-bullet rows in bottom CTA cards by text match (defensive if no list class)
