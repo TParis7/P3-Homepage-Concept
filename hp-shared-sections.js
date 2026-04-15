@@ -320,11 +320,41 @@
   // ========== COMMUNITY GALLERY ==========
   if (osSection) {
     var galDiv = document.createElement('div');
+    // v1.2.2 — restyled to match FS "Join +800 Students Nationwide" section exactly (white bg, FS images, section label, +800 accent)
     galDiv.innerHTML = `
 <!-- GALLERY -->
 <section class="gl">
-<div class="ctn"><div class="gl-hd fade-in"><h2>The P3 community in action</h2><p>Mentorship moments, campus events, and career breakthroughs</p></div></div>
-<div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track"><div class="gl-item"><img src="https://drive.google.com/thumbnail?id=1VEBoKGQSCuMfu3xja6eqq--nNyesAtbH&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+<div class="ctn"><div class="gl-hd fade-in"><div class="fs-gl-label">Community</div><h2>Join <em>+800</em> Students Nationwide</h2><p>Mentorship moments, campus events, and career breakthroughs.</p></div></div>
+<div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track">
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/224A1273_Original.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Copy%20of%20P3_Gala2025_0193.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/_P3_4718.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/P3_Gala2025_0425.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_7919.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9096_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_6982.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20P3_Gala2025_0065.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Doctors%20Park.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/group.jpeg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20_P3_4641.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9479_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/224A1273_Original.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Copy%20of%20P3_Gala2025_0193.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/_P3_4718.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/P3_Gala2025_0425.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_7919.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9096_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/IMG_6982.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20P3_Gala2025_0065.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Doctors%20Park.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/group.jpeg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20_P3_4641.jpg" alt="P3 Community" loading="lazy"></div>
+<div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Versus_P3_20260910-IMG9479_MollJeanNye.jpg" alt="P3 Community" loading="lazy"></div>
+</div></div>
+</section>
+`;
+    // OLD DRIVE-BASED GALLERY (pre-v1.2.2) — kept inert below for rollback reference
+    var _legacyGallery = `<div class="gl-item"><img src="https://drive.google.com/thumbnail?id=1VEBoKGQSCuMfu3xja6eqq--nNyesAtbH&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
 <div class="gl-item"><img src="https://drive.google.com/thumbnail?id=1xLZvOI4DTmehebDOoxhg6go144DQRAq6&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
 <div class="gl-item"><img src="https://drive.google.com/thumbnail?id=1-PfGnpKw5O4oP7R82z0LZeIwqPEN5RVS&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
 <div class="gl-item"><img src="https://drive.google.com/thumbnail?id=1GjI1ezcUWIvsArSwuKiAQJKhKnJezqlb&sz=w640" alt="P3 Community" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
@@ -644,14 +674,20 @@
     '.p3-dual-card-students .p3-dual-features, .p3-dual-card-partners .p3-dual-features, .p3-dual-features{display:none !important;}',
     '.p3-dual-feat-tag{display:none !important;}',
 
-    // "In The Press" eyebrow — Press section has LIGHT peach background, so use SOLID crimson pill with white text for strong contrast
+    // "In The Press" eyebrow — match "The Platform" (.os-eyebrow) exactly: soft crimson pill + dark crimson text
     'html body .p3-section-tag.p3-tag-crimson, html body .p3-social-proof .p3-section-tag{',
-    '  background:#D93A3A !important;',
-    '  background-color:#D93A3A !important;',
-    '  color:#ffffff !important;',
+    '  background:rgba(217,58,58,0.10) !important;',
+    '  background-color:rgba(217,58,58,0.10) !important;',
+    '  color:#B52F2F !important;',
     '  border:none !important;',
+    '  font-family:"Inter",system-ui,sans-serif !important;',
+    '  font-size:12px !important;',
+    '  font-weight:600 !important;',
+    '  letter-spacing:1px !important;',
+    '  padding:6px 16px !important;',
+    '  border-radius:50px !important;',
     '}',
-    'html body .p3-section-tag.p3-tag-crimson *, html body .p3-social-proof .p3-section-tag *{color:#ffffff !important;background:transparent !important;}',
+    'html body .p3-section-tag.p3-tag-crimson *, html body .p3-social-proof .p3-section-tag *{color:#B52F2F !important;background:transparent !important;}',
 
     // Dashboard Preview card headings — MAX specificity so h4 is clearly bigger/bolder than paragraph
     'html body .p3dp-card h4{font-size:17px !important;font-weight:700 !important;margin-bottom:6px !important;line-height:1.25 !important;}',
@@ -659,6 +695,61 @@
     '@media(max-width:640px){html body .p3dp-card h4{font-size:16px !important;} html body .p3dp-card p{font-size:12.5px !important;}}'
   ].join('\n');
   document.head.appendChild(v121css);
+
+  // ══════════════════════════════════════════════════════════════
+  // v1.2.2 PATCHES (Apr 15, 2026)
+  //  - Dashboard Preview cards → match FS page Pathway Milestone detail cards exactly
+  //  - Dual CTA cards → reduce desktop height
+  //  - Donut "94%" → tighter spacing above "Retained" label
+  //  - Community gallery restyle handled in gallery HTML rewrite below
+  // ══════════════════════════════════════════════════════════════
+  var v122css = document.createElement('style');
+  v122css.textContent = [
+    // ── Dashboard Preview cards: replicate .fm-ms-detail-card (FS page) exactly ──
+    'html body .p3dp-card{padding:18px 22px 12px !important;gap:16px !important;border-radius:14px !important;background:rgba(255,255,255,0.05) !important;border:1px solid rgba(255,255,255,0.1) !important;align-items:flex-start !important;}',
+    'html body .p3dp-icon{width:40px !important;height:40px !important;border-radius:10px !important;}',
+    'html body .p3dp-icon svg{width:20px !important;height:20px !important;}',
+    'html body .p3dp-card h4{font-size:1rem !important;font-weight:700 !important;color:#fff !important;margin-bottom:4px !important;line-height:1.3 !important;}',
+    'html body .p3dp-card p{font-size:0.85rem !important;color:rgba(255,255,255,0.6) !important;line-height:1.55 !important;}',
+    '@media(max-width:640px){',
+    '  html body .p3dp-card{padding:16px 18px 10px !important;gap:14px !important;}',
+    '  html body .p3dp-icon{width:36px !important;height:36px !important;}',
+    '  html body .p3dp-icon svg{width:18px !important;height:18px !important;}',
+    '  html body .p3dp-card h4{font-size:0.95rem !important;}',
+    '  html body .p3dp-card p{font-size:0.82rem !important;}',
+    '}',
+
+    // ── Dual CTA cards: reduce height on desktop only (mobile untouched) ──
+    '@media(min-width:769px){',
+    '  html body .p3-dual-cta .p3-cta-card, html body .p3-dual-cta .p3-dual-card-students, html body .p3-dual-cta .p3-dual-card-partners{',
+    '    padding-top:28px !important;padding-bottom:28px !important;min-height:0 !important;',
+    '  }',
+    '  html body .p3-dual-cta .p3-cta-card .p3-body-text, html body .p3-dual-cta .p3-cta-card p{margin-bottom:14px !important;}',
+    '}',
+
+    // ── Donut: tighten spacing between 94% value and "Retained" label ──
+    '.p3dpv-donut-center .dv{line-height:0.9 !important;}',
+    '.p3dpv-donut-center .dl{margin-top:0 !important;}',
+    '.p3dpv-donut-big{padding:2px 0 8px !important;gap:4px !important;}',
+
+    // ── Community gallery restyle → match FS "Join +800 Students Nationwide" exactly ──
+    '.gl{background:#fff !important;padding:8px 0 48px !important;}',
+    '.gl .ctn{text-align:center;margin-bottom:28px;}',
+    '.gl-hd{text-align:center !important;margin-bottom:20px !important;}',
+    '.gl-hd .fs-gl-label{display:inline-flex;align-items:center;padding:4px 12px;border-radius:100px;background:rgba(217,58,58,0.08);color:#D93A3A;font-family:"Satoshi","Inter",sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;}',
+    '.gl-hd h2{color:#1a1a1a !important;font-family:"Space Grotesk",sans-serif !important;font-size:2.4rem !important;font-weight:700 !important;margin-bottom:16px !important;line-height:1.2 !important;}',
+    '.gl-hd h2 em{font-style:normal !important;color:#D93A3A !important;}',
+    '.gl-hd p{color:#555 !important;font-family:"Inter",sans-serif !important;font-size:1.05rem !important;line-height:1.7 !important;max-width:640px !important;margin:0 auto !important;}',
+    '.gl-track{gap:12px !important;}',
+    '.gl-item{width:240px !important;height:180px !important;border-radius:12px !important;background:#f5f5f5 !important;}',
+    '.gl-fl,.gl-fr{display:none !important;}',
+    '@media(max-width:768px){',
+    '  .gl-hd h2{font-size:1.6rem !important;}',
+    '  .gl-hd p{font-size:0.92rem !important;}',
+    '  .gl-item{width:200px !important;height:150px !important;}',
+    '}'
+  ].join('\n');
+  document.head.appendChild(v122css);
 
   // JS: Force "In The Press" eyebrow to maroon variant (low-contrast otherwise)
   // Also hide feature-bullet rows in bottom CTA cards by text match (defensive if no list class)
@@ -669,8 +760,9 @@
       tags.forEach(function(t) {
         var txt = (t.textContent || '').trim().toLowerCase();
         if (txt === 'in the press' || txt === 'in press') {
-          t.classList.remove('p3tag-light');
-          t.classList.add('p3tag-maroon');
+          // Match "The Platform" (os-eyebrow) light pill look — Press bg is light peach
+          t.classList.remove('p3tag-maroon');
+          t.classList.add('p3tag-light');
         }
       });
     }, 0);
