@@ -413,9 +413,8 @@
     }
   });
 
-  // Dashboard Preview section — center the header text + Learn More button on mobile
-  var dp = document.querySelector('.p3-dash-preview');
-  if (dp) dp.classList.add('pp-mobile-center');
+  // Dashboard Preview section — skip mobile centering (rebuilt section below handles its own layout)
+  // (removed .pp-mobile-center; new p3dp section is responsive-aware)
 
   // Dual CTA (Ready to transform... Get Started) — center header, sub, button on mobile
   var dc = document.querySelector('.p3-dual-cta');
@@ -435,5 +434,324 @@
       '.p3-gap-card .p3-body-text{display:block!important;margin-top:12px!important;text-align:center!important;}' +
     '}';
   document.head.appendChild(centerCss);
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // v1.2.0 ADDITIONS (Apr 15, 2026)
+  //   A) Eyebrow harmonization — every .p3-section-tag → pill style
+  //   B) The Platform desktop padding reduction
+  //   C) Font harmonization — lede paragraphs + card body copy
+  //   D) Dashboard Preview section — full rebuild from mockup
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var v12css = document.createElement('style');
+  v12css.textContent = [
+
+    // ── A) UNIVERSAL EYEBROW PILL ──
+    // Base pill: applies to every .p3-section-tag on the page
+    '.p3-section-tag{',
+    '  display:inline-block !important;',
+    '  padding:6px 16px !important;',
+    '  border-radius:50px !important;',
+    '  font-family:"Inter",system-ui,sans-serif !important;',
+    '  font-size:12px !important;',
+    '  font-weight:600 !important;',
+    '  letter-spacing:1px !important;',
+    '  text-transform:uppercase !important;',
+    '  line-height:1.4 !important;',
+    '  margin-bottom:16px !important;',
+    '  width:auto !important;',
+    '  border:none !important;',
+    '}',
+    // Light variant — for sections with light backgrounds (Why Now, Platform rebuilt, Outcomes, Pipeline, ROI, Press, For Students CTA)
+    '.p3-section-tag.p3tag-light{',
+    '  background:rgba(217,58,58,0.10) !important;',
+    '  color:#B52F2F !important;',
+    '}',
+    // Maroon variant — for sections with dark/maroon backgrounds (Dashboard Preview, Dual CTA, Gallery)
+    '.p3-section-tag.p3tag-maroon{',
+    '  background:rgba(255,255,255,0.10) !important;',
+    '  color:#ffffff !important;',
+    '}',
+    // Also harmonize the Workforce OS eyebrow we inject (.os-eyebrow) to match light variant look
+    '.os-eyebrow{',
+    '  font-family:"Inter",system-ui,sans-serif !important;',
+    '  font-size:12px !important;',
+    '  letter-spacing:1px !important;',
+    '  background:rgba(217,58,58,0.10) !important;',
+    '  color:#B52F2F !important;',
+    '  padding:6px 16px !important;',
+    '  border-radius:50px !important;',
+    '  font-weight:600 !important;',
+    '  margin-bottom:16px !important;',
+    '}',
+
+    // ── B) PLATFORM SECTION — desktop padding reduction ──
+    '@media(min-width:769px){',
+    '  .os-section{padding-top:36px !important;padding-bottom:36px !important;}',
+    '  .p3-platform-section{padding-top:36px !important;padding-bottom:36px !important;}',
+    '}',
+
+    // ── C) FONT HARMONIZATION ──
+    // Normalize lede/subhead paragraphs under H2s site-wide on homepage
+    '.p3-dash-preview .p3-lede, .p3-dash-preview .p3-sub, .p3-dash-preview p.p3-body-text:first-of-type,',
+    '.p3-why-now .p3-sub, .p3-why-now p.p3-body-text:first-of-type,',
+    '.p3-press .p3-sub, .p3-press p.p3-body-text:first-of-type,',
+    '.p3-dual-cta .p3-sub, .p3-dual-cta p.p3-body-text:first-of-type,',
+    '.os-sub{',
+    '  font-size:15px !important;',
+    '  line-height:1.65 !important;',
+    '  font-family:"Inter",system-ui,sans-serif !important;',
+    '}',
+    // Normalize body copy inside feature/gap/outcome cards
+    '.p3-gap-card .p3-body-text, .p3-gap-card p,',
+    '.p3-outcome-card .p3-body-text, .p3-outcome-card p,',
+    '.p3-cta-card .p3-body-text, .p3-cta-card p{',
+    '  font-size:14px !important;',
+    '  line-height:1.55 !important;',
+    '  font-family:"Inter",system-ui,sans-serif !important;',
+    '}',
+    // Card titles — subtle harmonization (don\'t break existing scale)
+    '.p3-gap-card .p3-h3, .p3-outcome-card .p3-h3, .p3-cta-card .p3-h3{',
+    '  font-size:18px !important;',
+    '  line-height:1.25 !important;',
+    '  font-weight:700 !important;',
+    '}',
+    '@media(max-width:600px){',
+    '  .p3-gap-card .p3-body-text, .p3-outcome-card .p3-body-text, .p3-cta-card .p3-body-text{font-size:13.5px !important;}',
+    '}',
+
+    // ── D) DASHBOARD PREVIEW (rebuilt) ──
+    '.p3-dash-preview.p3dp-rebuilt{padding:0 !important;}',
+    '.p3dp{padding:56px 48px 52px;background:#4A1020;color:#fff;font-family:"Inter",system-ui,sans-serif;}',
+    '.p3dp-inner{display:grid;grid-template-columns:1fr 1.25fr;gap:44px;align-items:stretch;max-width:1160px;margin:0 auto;}',
+    '.p3dp h2{font-family:"Space Grotesk",sans-serif;font-size:clamp(26px,3.3vw,38px);font-weight:700;line-height:1.15;letter-spacing:-0.02em;margin-bottom:12px;color:#fff;}',
+    '.p3dp h2 .accent{color:#D93A3A;}',
+    '.p3dp .p3dp-lede{font-size:15px;color:rgba(255,255,255,0.7);line-height:1.65;margin-bottom:22px;max-width:520px;}',
+    '.p3dp-left{display:flex;flex-direction:column;}',
+    '.p3dp-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;}',
+    '.p3dp-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;transition:background .3s,border-color .3s;}',
+    '.p3dp-card:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,138,138,0.35);}',
+    '.p3dp-icon{width:36px;height:36px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}',
+    '.p3dp-icon.red{background:rgba(217,58,58,0.2);} .p3dp-icon.blue{background:rgba(59,130,246,0.2);} .p3dp-icon.green{background:rgba(34,197,94,0.2);}',
+    '.p3dp-icon svg{width:18px;height:18px;}',
+    '.p3dp-card h4{font-family:"Inter",sans-serif;font-size:14.5px;font-weight:700;color:#fff;margin-bottom:3px;}',
+    '.p3dp-card p{font-size:12.5px;color:rgba(255,255,255,0.65);line-height:1.5;}',
+    '.p3dp-btn{background:#fff;color:#4A1020;padding:12px 26px;border-radius:50px;font-weight:600;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .3s;align-self:flex-start;}',
+    '.p3dp-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.25);}',
+
+    // Right — app-style dashboard mock
+    '.p3dp-visual{background:rgba(10,11,16,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;position:relative;display:grid;grid-template-columns:52px 1fr;box-shadow:0 30px 70px -20px rgba(0,0,0,0.5),0 0 0 1px rgba(217,58,58,0.1);}',
+    '.p3dp-visual::after{content:"";position:absolute;top:-25%;right:-10%;width:360px;height:360px;background:radial-gradient(circle,rgba(217,58,58,0.14),transparent 65%);pointer-events:none;}',
+    '.p3dpv-rail{background:#0A0B10;border-right:1px solid rgba(255,255,255,0.06);padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:8px;}',
+    '.p3dpv-rail-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#D93A3A,#6B1D1D);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;font-family:"Space Grotesk";margin-bottom:4px;box-shadow:0 4px 10px -2px rgba(217,58,58,0.5);}',
+    '.p3dpv-rail-div{width:22px;height:1px;background:rgba(255,255,255,0.08);margin:2px 0;}',
+    '.p3dpv-rail-item{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.38);font-size:13px;}',
+    '.p3dpv-rail-item.active{color:#fff;background:rgba(217,58,58,0.22);box-shadow:inset 0 0 0 1px rgba(217,58,58,0.4);}',
+    '.p3dpv-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px;min-width:0;position:relative;z-index:1;}',
+    '.p3dpv-topbar{display:flex;justify-content:space-between;align-items:center;}',
+    '.p3dpv-title{font-family:"Space Grotesk";font-size:13.5px;font-weight:600;color:#fff;}',
+    '.p3dpv-title .muted{color:rgba(255,255,255,0.45);font-weight:500;margin-left:4px;font-size:12px;}',
+    '.p3dpv-export{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:10.5px;font-weight:600;letter-spacing:0.02em;padding:5px 10px;border-radius:7px;}',
+    '.p3dpv-export svg{width:12px;height:12px;}',
+    '.p3dpv-hero{background:linear-gradient(135deg,#4A0F0F 0%,#8B1F1F 38%,#D93A3A 78%,#F26B5E 100%);border-radius:11px;padding:14px 16px;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.1),0 8px 24px -8px rgba(217,58,58,0.4);}',
+    '.p3dpv-hero::before{content:"";position:absolute;top:-60%;right:-15%;width:300px;height:300px;background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 65%);pointer-events:none;}',
+    '.p3dpv-hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.28);padding:3px 9px;border-radius:12px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#fff;margin-bottom:10px;}',
+    '.p3dpv-hero-tag .dot{width:5px;height:5px;border-radius:50%;background:#6AFAA0;box-shadow:0 0 0 2px rgba(106,250,160,0.3);}',
+    '.p3dpv-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative;z-index:1;}',
+    '.p3dpv-kpi .k-label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.82);margin-bottom:4px;font-weight:600;}',
+    '.p3dpv-kpi .k-val{font-family:"Space Grotesk";font-size:28px;font-weight:700;color:#fff;line-height:1;letter-spacing:-0.02em;}',
+    '.p3dpv-kpi .k-val .u{font-size:16px;margin-left:1px;opacity:0.85;}',
+    '.p3dpv-kpi .k-delta{font-size:10px;color:#6AFAA0;margin-top:4px;font-weight:600;}',
+    '.p3dpv-row{display:grid;grid-template-columns:1.35fr 1fr;gap:10px;}',
+    '.p3dpv-panel{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;}',
+    '.p3dpv-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}',
+    '.p3dpv-panel-title{font-family:"Space Grotesk";font-size:11.5px;font-weight:600;color:#fff;}',
+    '.p3dpv-panel-sub{font-size:9.5px;color:rgba(255,255,255,0.45);}',
+    '.p3dpv-bars{display:flex;flex-direction:column;gap:9px;}',
+    '.p3dpv-bar-row{display:grid;grid-template-columns:1fr 32px;gap:10px;align-items:center;}',
+    '.p3dpv-bar-track{height:20px;border-radius:5px;background:rgba(255,255,255,0.06);position:relative;overflow:hidden;}',
+    '.p3dpv-bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:10px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;}',
+    '.p3dpv-bar-fill.b1{background:linear-gradient(90deg,#D93A3A,#ff8a8a);width:100%;}',
+    '.p3dpv-bar-fill.b2{background:linear-gradient(90deg,#B52F2F,#E85F4E);width:82%;}',
+    '.p3dpv-bar-fill.b3{background:linear-gradient(90deg,#8B1F1F,#D93A3A);width:68%;}',
+    '.p3dpv-bar-fill.b4{background:linear-gradient(90deg,#6B1D1D,#B52F2F);width:46%;}',
+    '.p3dpv-bar-val{font-family:"Space Grotesk";font-size:11px;font-weight:700;color:#fff;text-align:right;font-variant-numeric:tabular-nums;}',
+    '.p3dpv-donut-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:100%;padding:6px 0 14px;}',
+    '.p3dpv-donut-svg-big{width:116px;height:116px;display:block;filter:drop-shadow(0 4px 14px rgba(217,58,58,0.35));}',
+    '.p3dpv-donut-stack{position:relative;display:flex;align-items:center;justify-content:center;}',
+    '.p3dpv-donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}',
+    '.p3dpv-donut-center .dv{font-family:"Space Grotesk";font-size:24px;font-weight:700;color:#fff;line-height:1;letter-spacing:-0.02em;}',
+    '.p3dpv-donut-center .dl{font-size:8.5px;color:rgba(255,255,255,0.55);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;}',
+    '.p3dpv-donut-big-bench{font-size:10px;color:#6AFAA0;font-weight:600;margin-top:4px;}',
+    '.p3dpv-trend{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px 10px;flex:1;min-height:0;display:flex;flex-direction:column;}',
+    '.p3dpv-trend-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}',
+    '.p3dpv-trend-title{font-family:"Space Grotesk";font-size:11.5px;font-weight:600;color:#fff;}',
+    '.p3dpv-trend-meta{display:flex;gap:14px;align-items:baseline;}',
+    '.p3dpv-trend-meta .total{font-family:"Space Grotesk";font-size:16px;font-weight:700;color:#fff;}',
+    '.p3dpv-trend-meta .delta{font-size:10px;color:#6AFAA0;font-weight:600;}',
+    '.p3dpv-trend-svg{width:100%;height:78px;display:block;flex:1;}',
+    '.p3dpv-trend-labels{display:flex;justify-content:space-between;font-size:8.5px;color:rgba(255,255,255,0.38);padding:4px 2px 0;letter-spacing:0.04em;}',
+    '@media(max-width:1024px){.p3dp-inner{grid-template-columns:1fr;gap:28px;}.p3dp{padding:48px 32px;}}',
+    '@media(max-width:640px){',
+    '  .p3dp{padding:40px 20px;}',
+    '  .p3dp-left{align-items:center;text-align:center;}',
+    '  .p3dp h2{text-align:center;}',
+    '  .p3dp .p3dp-lede{text-align:center;margin-left:auto;margin-right:auto;}',
+    '  .p3dp-btn{align-self:center;}',
+    '  .p3dp-card{text-align:left;padding:12px 14px;}',
+    '  .p3dp-card h4{font-size:14px;} .p3dp-card p{font-size:12px;}',
+    '  .p3dpv-kpis{grid-template-columns:repeat(3,1fr);gap:8px;}',
+    '  .p3dpv-kpi .k-val{font-size:20px;} .p3dpv-kpi .k-val .u{font-size:12px;}',
+    '  .p3dpv-kpi .k-label{font-size:8px;} .p3dpv-kpi .k-delta{font-size:8.5px;}',
+    '  .p3dpv-row{grid-template-columns:1fr;}',
+    '  .p3dpv-row > .p3dpv-panel:nth-child(2){display:none;}',
+    '}'
+  ].join('\n');
+  document.head.appendChild(v12css);
+
+  // ── A) Eyebrow harmonization (JS: tag maroon vs light) ──
+  (function harmonizeEyebrows() {
+    var tags = document.querySelectorAll('.p3-section-tag');
+    tags.forEach(function(t) {
+      // Find the closest section (or parent) and inspect its bg color
+      var sec = t.closest('section') || t.parentElement;
+      if (!sec) return;
+      var bg = window.getComputedStyle(sec).backgroundColor;
+      var isDark = false;
+      // parse rgb
+      var m = bg.match(/rgba?\(([^)]+)\)/);
+      if (m) {
+        var parts = m[1].split(',').map(function(x){return parseFloat(x);});
+        var r = parts[0], g = parts[1], b = parts[2];
+        // relative luminance
+        var lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+        isDark = lum < 0.5;
+      }
+      // Walk up to find dark ancestor if the immediate bg is transparent
+      if (!isDark) {
+        var p = sec.parentElement;
+        while (p && p !== document.body) {
+          var pbg = window.getComputedStyle(p).backgroundColor;
+          var pm = pbg.match(/rgba?\(([^)]+)\)/);
+          if (pm) {
+            var pp = pm[1].split(',').map(function(x){return parseFloat(x);});
+            if (pp[3] === undefined || pp[3] > 0.1) {
+              var plum = (0.299*pp[0] + 0.587*pp[1] + 0.114*pp[2]) / 255;
+              if (plum < 0.5) { isDark = true; break; }
+              if (plum >= 0.5) break;
+            }
+          }
+          p = p.parentElement;
+        }
+      }
+      t.classList.add(isDark ? 'p3tag-maroon' : 'p3tag-light');
+    });
+  })();
+
+  // ── D) Dashboard Preview — full rebuild ──
+  (function rebuildDashboardPreview() {
+    var dash = document.querySelector('.p3-dash-preview');
+    if (!dash) return;
+    // Clear existing content, add marker class, inject new structure
+    dash.classList.add('p3dp-rebuilt');
+    dash.innerHTML =
+      '<div class="p3dp"><div class="p3dp-inner">' +
+        '<div class="p3dp-left">' +
+          '<div class="p3-section-tag p3tag-maroon">Dashboard Preview</div>' +
+          '<h2>Student journeys become <span class="accent">institutional intelligence</span></h2>' +
+          '<p class="p3dp-lede">A dashboard built for partner institutions. See how mentorship drives engagement, retention, and real outcomes across every cohort.</p>' +
+          '<div class="p3dp-cards">' +
+            '<div class="p3dp-card"><div class="p3dp-icon red">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="#D93A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>' +
+              '</div><div><h4>Engagement and Retention</h4><p>See how students are engaging with their mentors. Track active users, session frequency, and retention across every cohort.</p></div></div>' +
+            '<div class="p3dp-card"><div class="p3dp-icon blue">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>' +
+              '</div><div><h4>Longitudinal Outcomes</h4><p>Follow students from their first milestone to their first job. See how mentorship translates into enrollment, internships, and placement.</p></div></div>' +
+            '<div class="p3dp-card"><div class="p3dp-icon green">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="14" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg>' +
+              '</div><div><h4>Custom Impact Reports</h4><p>Board ready dashboards tailored to your institution. Benchmark cohorts against national peers and share results with stakeholders.</p></div></div>' +
+          '</div>' +
+          '<a href="/partner" class="p3dp-btn">Learn More &rarr;</a>' +
+        '</div>' +
+        '<div class="p3dp-visual">' +
+          '<div class="p3dpv-rail">' +
+            '<div class="p3dpv-rail-logo">P3</div>' +
+            '<div class="p3dpv-rail-item active">&#9636;</div>' +
+            '<div class="p3dpv-rail-item">&#9096;</div>' +
+            '<div class="p3dpv-rail-item">&#9678;</div>' +
+            '<div class="p3dpv-rail-item">&#9651;</div>' +
+            '<div class="p3dpv-rail-div"></div>' +
+            '<div class="p3dpv-rail-item">&rarr;</div>' +
+            '<div class="p3dpv-rail-item">&#9737;</div>' +
+            '<div class="p3dpv-rail-item">&#9204;</div>' +
+          '</div>' +
+          '<div class="p3dpv-body">' +
+            '<div class="p3dpv-topbar">' +
+              '<div class="p3dpv-title">Executive Dashboard<span class="muted">&middot; Cohort Performance</span></div>' +
+              '<button class="p3dpv-export" type="button">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+                'Export PDF' +
+              '</button>' +
+            '</div>' +
+            '<div class="p3dpv-hero">' +
+              '<div class="p3dpv-hero-tag"><span class="dot"></span> Institutional Intelligence &middot; Last 12 Months</div>' +
+              '<div class="p3dpv-kpis">' +
+                '<div class="p3dpv-kpi"><div class="k-label">Active Mentees</div><div class="k-val">312</div><div class="k-delta">&#9650; 18% YoY</div></div>' +
+                '<div class="p3dpv-kpi"><div class="k-label">Retention</div><div class="k-val">94<span class="u">%</span></div><div class="k-delta">&#9650; 29 pts</div></div>' +
+                '<div class="p3dpv-kpi"><div class="k-label">Cost Savings</div><div class="k-val">$2.1<span class="u">M</span></div><div class="k-delta">&#9650; 12%</div></div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="p3dpv-row">' +
+              '<div class="p3dpv-panel">' +
+                '<div class="p3dpv-panel-head"><div class="p3dpv-panel-title">Top Milestones</div><div class="p3dpv-panel-sub">This year</div></div>' +
+                '<div class="p3dpv-bars">' +
+                  '<div class="p3dpv-bar-row"><div class="p3dpv-bar-track"><div class="p3dpv-bar-fill b1">Matched with mentor</div></div><div class="p3dpv-bar-val">534</div></div>' +
+                  '<div class="p3dpv-bar-row"><div class="p3dpv-bar-track"><div class="p3dpv-bar-fill b2">Selected Major</div></div><div class="p3dpv-bar-val">438</div></div>' +
+                  '<div class="p3dpv-bar-row"><div class="p3dpv-bar-track"><div class="p3dpv-bar-fill b3">College enrollment</div></div><div class="p3dpv-bar-val">364</div></div>' +
+                  '<div class="p3dpv-bar-row"><div class="p3dpv-bar-track"><div class="p3dpv-bar-fill b4">Internship secured</div></div><div class="p3dpv-bar-val">246</div></div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="p3dpv-panel">' +
+                '<div class="p3dpv-panel-head"><div class="p3dpv-panel-title">Program Retention</div><div class="p3dpv-panel-sub">12-mo</div></div>' +
+                '<div class="p3dpv-donut-big">' +
+                  '<div class="p3dpv-donut-stack">' +
+                    '<svg class="p3dpv-donut-svg-big" viewBox="0 0 40 40">' +
+                      '<defs>' +
+                        '<linearGradient id="p3dpgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFB099"/><stop offset="45%" stop-color="#F26B5E"/><stop offset="100%" stop-color="#D93A3A"/></linearGradient>' +
+                        '<radialGradient id="p3dpglow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(217,58,58,0.22)"/><stop offset="70%" stop-color="rgba(217,58,58,0)"/></radialGradient>' +
+                      '</defs>' +
+                      '<circle cx="20" cy="20" r="13" fill="url(#p3dpglow)"/>' +
+                      '<circle cx="20" cy="20" r="18.5" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="0.5" stroke-dasharray="0.4 1.6"/>' +
+                      '<circle cx="20" cy="20" r="15" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3.2"/>' +
+                      '<circle cx="20" cy="20" r="15" fill="none" stroke="url(#p3dpgrad)" stroke-width="3.2" stroke-dasharray="88.6,94.2" stroke-linecap="round" transform="rotate(-90 20 20)"/>' +
+                      '<circle cx="20" cy="20" r="11.3" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.35"/>' +
+                    '</svg>' +
+                    '<div class="p3dpv-donut-center"><div class="dv">94<span style="font-size:14px">%</span></div><div class="dl">Retained</div></div>' +
+                  '</div>' +
+                  '<div class="p3dpv-donut-big-bench">&#9650; 29 pts vs baseline</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="p3dpv-trend">' +
+              '<div class="p3dpv-trend-head">' +
+                '<div class="p3dpv-trend-title">Cumulative Milestones</div>' +
+                '<div class="p3dpv-trend-meta"><span class="total">2,395</span><span class="delta">&#9650; 32% YoY</span></div>' +
+              '</div>' +
+              '<svg class="p3dpv-trend-svg" viewBox="0 0 400 80" preserveAspectRatio="none">' +
+                '<defs><linearGradient id="p3dptgrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#D93A3A" stop-opacity="0.55"/><stop offset="100%" stop-color="#D93A3A" stop-opacity="0"/></linearGradient></defs>' +
+                '<line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>' +
+                '<line x1="0" y1="45" x2="400" y2="45" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>' +
+                '<line x1="0" y1="70" x2="400" y2="70" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>' +
+                '<path d="M0,72 L33,68 L66,62 L100,58 L133,50 L166,40 L200,36 L233,28 L266,22 L300,16 L333,12 L400,8 L400,80 L0,80 Z" fill="url(#p3dptgrad)"/>' +
+                '<path d="M0,72 L33,68 L66,62 L100,58 L133,50 L166,40 L200,36 L233,28 L266,22 L300,16 L333,12 L400,8" fill="none" stroke="#ff8a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<circle cx="400" cy="8" r="3.5" fill="#ff8a8a"/>' +
+                '<circle cx="400" cy="8" r="6" fill="#ff8a8a" opacity="0.25"/>' +
+              '</svg>' +
+              '<div class="p3dpv-trend-labels"><span>May</span><span>Jul</span><span>Sep</span><span>Nov</span><span>Jan</span><span>Mar</span></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div></div>';
+  })();
 
 })();
