@@ -324,7 +324,7 @@
     galDiv.innerHTML = `
 <!-- GALLERY -->
 <section class="gl">
-<div class="ctn"><div class="gl-hd fade-in"><div class="fs-gl-label">Community</div><h2>Join <em>+800</em> Students Nationwide</h2><p>Mentorship moments, campus events, and career breakthroughs.</p></div></div>
+<div class="ctn"><div class="gl-hd fade-in"><h2>Talent is universal. <em>Our data proves it.</em></h2><p>Hundreds of students&hellip; millions to go.</p></div></div>
 <div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track">
 <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/224A1273_Original.jpg" alt="P3 Community" loading="lazy"></div>
 <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Copy%20of%20P3_Gala2025_0193.jpg" alt="P3 Community" loading="lazy"></div>
@@ -728,9 +728,18 @@
     '}',
 
     // ── Donut: tighten spacing between 94% value and "Retained" label ──
-    '.p3dpv-donut-center .dv{line-height:0.9 !important;}',
-    '.p3dpv-donut-center .dl{margin-top:0 !important;}',
-    '.p3dpv-donut-big{padding:2px 0 8px !important;gap:4px !important;}',
+    '.p3dpv-donut-center .dv{line-height:0.82 !important;margin-bottom:-2px !important;}',
+    '.p3dpv-donut-center .dl{margin-top:-4px !important;}',
+    '.p3dpv-donut-big{padding:2px 0 8px !important;gap:2px !important;}',
+
+    // ── Dual CTA buttons: pill-shaped like Learn More, centered ──
+    'html body .p3-dual-cta .p3-cta-card{align-items:center !important;text-align:center !important;}',
+    'html body .p3-dual-cta .p3-cta-card a.p3-btn-primary, html body .p3-dual-cta .p3-cta-card a.p3-btn-light, html body .p3-dual-cta .p3-cta-card a.p3-btn-ghost, html body .p3-dual-cta .p3-cta-card a.w-button, html body .p3-dual-cta .p3-cta-card a.btn, html body .p3-dual-cta .p3-cta-card a[class*="btn"]{',
+    '  padding:12px 26px !important;border-radius:50px !important;font-size:14px !important;font-weight:600 !important;',
+    '  display:inline-flex !important;align-items:center !important;justify-content:center !important;gap:8px !important;',
+    '  width:auto !important;max-width:max-content !important;min-width:0 !important;align-self:center !important;',
+    '  margin-left:auto !important;margin-right:auto !important;',
+    '}',
 
     // ── Community gallery restyle → match FS "Join +800 Students Nationwide" exactly ──
     '.gl{background:#fff !important;padding:8px 0 48px !important;}',
