@@ -324,7 +324,7 @@
     galDiv.innerHTML = `
 <!-- GALLERY -->
 <section class="gl">
-<div class="ctn"><div class="gl-hd fade-in"><h2>Talent is universal. <em>Our data proves it.</em></h2><p>Hundreds of students&hellip; millions to go.</p></div></div>
+<div class="ctn"><div class="gl-hd fade-in"><h2><span class="gl-l1">Talent is universal.</span> <em class="gl-l2">Our data proves it.</em></h2><p>Hundreds of students&hellip; millions to go.</p></div></div>
 <div class="gl-wrap"><div class="gl-fl"></div><div class="gl-fr"></div><div class="gl-track">
 <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/224A1273_Original.jpg" alt="P3 Community" loading="lazy"></div>
 <div class="gl-item"><img src="https://tparis7.github.io/Mentor-Page-Redesign/Copy%20of%20Copy%20of%20P3_Gala2025_0193.jpg" alt="P3 Community" loading="lazy"></div>
@@ -1000,6 +1000,94 @@
           '</div>' +
         '</div>' +
       '</div></div>';
+  })();
+
+  // ══════════════════════════════════════════════════════════════
+  // v1.2.3 PATCHES (Apr 17, 2026)
+  //  - Dual CTA: force cards side-by-side on desktop (≥769px)
+  //  - Gallery headline "Talent is universal. / Our data proves it." breaks
+  //    across 2 lines on mobile (≤640px)
+  //  - Gallery subhead "Hundreds of students…" — harmonize font size to
+  //    match standard site lede (15px desktop / 14px mobile) and win over
+  //    all earlier duplicate rules via html-body selector
+  // ══════════════════════════════════════════════════════════════
+  var v123css = document.createElement('style');
+  v123css.textContent = [
+    // ── A) Dual CTA cards: side-by-side on desktop ──
+    // The two cards share a common parent inside .p3-dual-cta; JS below
+    // tags that parent with .pp-dual-cta-grid so we can lay it out as a
+    // 2-col grid without assuming Webflow's wrapper class name.
+    '@media(min-width:769px){',
+    '  html body .p3-dual-cta .pp-dual-cta-grid{',
+    '    display:grid !important;',
+    '    grid-template-columns:1fr 1fr !important;',
+    '    gap:24px !important;',
+    '    align-items:stretch !important;',
+    '    max-width:1160px !important;',
+    '    margin-left:auto !important;',
+    '    margin-right:auto !important;',
+    '    width:100% !important;',
+    '  }',
+    '  html body .p3-dual-cta .pp-dual-cta-grid > .p3-cta-card,',
+    '  html body .p3-dual-cta .pp-dual-cta-grid > .p3-dual-card-students,',
+    '  html body .p3-dual-cta .pp-dual-cta-grid > .p3-dual-card-partners{',
+    '    width:auto !important;max-width:100% !important;margin:0 !important;',
+    '  }',
+    '}',
+    // On mobile keep the current stacked behaviour (no grid)
+    '@media(max-width:768px){',
+    '  html body .p3-dual-cta .pp-dual-cta-grid{display:flex !important;flex-direction:column !important;gap:20px !important;}',
+    '}',
+
+    // ── B) Gallery headline 2-line break on mobile ──
+    '@media(max-width:640px){',
+    '  html body .gl-hd h2 .gl-l1, html body .gl-hd h2 .gl-l2{display:block !important;}',
+    '  html body .gl-hd h2{line-height:1.2 !important;}',
+    '}',
+
+    // ── C) Gallery subhead font size — harmonize with site-wide lede ──
+    'html body .gl-hd p{font-size:15px !important;line-height:1.55 !important;max-width:560px !important;margin-left:auto !important;margin-right:auto !important;}',
+    '@media(max-width:640px){',
+    '  html body .gl-hd p{font-size:14px !important;line-height:1.5 !important;}',
+    '}'
+  ].join('\n');
+  document.head.appendChild(v123css);
+
+  // Tag the dual-CTA cards' common parent so the grid CSS above can target it.
+  (function sideBysideDualCta(){
+    function apply(){
+      var section = document.querySelector('.p3-dual-cta');
+      if (!section) return;
+      // Prefer the students card; fall back to the first CTA card in the section.
+      var firstCard = section.querySelector('.p3-dual-card-students')
+                   || section.querySelector('.p3-cta-card');
+      if (!firstCard || !firstCard.parentElement) return;
+      var parent = firstCard.parentElement;
+      // Walk up until we find a parent that actually contains BOTH cards
+      // (sometimes Webflow wraps each card in its own column div).
+      var cards = section.querySelectorAll('.p3-cta-card, .p3-dual-card-students, .p3-dual-card-partners');
+      if (cards.length < 2) return;
+      // Compute common ancestor of the first two cards.
+      function ancestors(el){
+        var a = [];
+        while (el) { a.push(el); el = el.parentElement; }
+        return a;
+      }
+      var aA = ancestors(cards[0]);
+      var aB = ancestors(cards[1]);
+      var setB = new Set(aB);
+      var common = aA.find(function(n){ return setB.has(n); });
+      if (common && common !== section && common !== document.body) {
+        common.classList.add('pp-dual-cta-grid');
+      } else {
+        // Fallback: tag immediate parent.
+        parent.classList.add('pp-dual-cta-grid');
+      }
+    }
+    apply();
+    setTimeout(apply, 300);
+    setTimeout(apply, 1200);
+    window.addEventListener('load', apply);
   })();
 
 })();
