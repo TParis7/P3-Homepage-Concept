@@ -1003,91 +1003,140 @@
   })();
 
   // ══════════════════════════════════════════════════════════════
-  // v1.2.3 PATCHES (Apr 17, 2026)
-  //  - Dual CTA: force cards side-by-side on desktop (≥769px)
-  //  - Gallery headline "Talent is universal. / Our data proves it." breaks
-  //    across 2 lines on mobile (≤640px)
-  //  - Gallery subhead "Hundreds of students…" — harmonize font size to
-  //    match standard site lede (15px desktop / 14px mobile) and win over
-  //    all earlier duplicate rules via html-body selector
+  // v1.2.4 PATCHES (Apr 17, 2026)
+  //  A) Dual CTA cards side-by-side on desktop — use inline !important
+  //     styles on the common ancestor (CSS classes kept losing to Webflow)
+  //  B) Gallery headline "Talent is universal. / Our data proves it."
+  //     breaks across 2 lines on mobile (≤640px) — spans set display:block
+  //  C) Trim top padding above "Talent is universal" on mobile only
+  //  D) Match .gl-hd p exactly to .os-sub (15px/1.55/#6E6A66 desktop,
+  //     13px/1.5 mobile) — same bg is white, so colors match directly
+  //  E) Dashboard Preview h2 "Student journeys become institutional
+  //     intelligence" — break onto 2 lines on mobile (.accent → block)
   // ══════════════════════════════════════════════════════════════
-  var v123css = document.createElement('style');
-  v123css.textContent = [
-    // ── A) Dual CTA cards: side-by-side on desktop ──
-    // The two cards share a common parent inside .p3-dual-cta; JS below
-    // tags that parent with .pp-dual-cta-grid so we can lay it out as a
-    // 2-col grid without assuming Webflow's wrapper class name.
-    '@media(min-width:769px){',
-    '  html body .p3-dual-cta .pp-dual-cta-grid{',
-    '    display:grid !important;',
-    '    grid-template-columns:1fr 1fr !important;',
-    '    gap:24px !important;',
-    '    align-items:stretch !important;',
-    '    max-width:1160px !important;',
-    '    margin-left:auto !important;',
-    '    margin-right:auto !important;',
-    '    width:100% !important;',
-    '  }',
-    '  html body .p3-dual-cta .pp-dual-cta-grid > .p3-cta-card,',
-    '  html body .p3-dual-cta .pp-dual-cta-grid > .p3-dual-card-students,',
-    '  html body .p3-dual-cta .pp-dual-cta-grid > .p3-dual-card-partners{',
-    '    width:auto !important;max-width:100% !important;margin:0 !important;',
-    '  }',
-    '}',
-    // On mobile keep the current stacked behaviour (no grid)
-    '@media(max-width:768px){',
-    '  html body .p3-dual-cta .pp-dual-cta-grid{display:flex !important;flex-direction:column !important;gap:20px !important;}',
-    '}',
-
+  var v124css = document.createElement('style');
+  v124css.textContent = [
     // ── B) Gallery headline 2-line break on mobile ──
     '@media(max-width:640px){',
     '  html body .gl-hd h2 .gl-l1, html body .gl-hd h2 .gl-l2{display:block !important;}',
     '  html body .gl-hd h2{line-height:1.2 !important;}',
     '}',
 
-    // ── C) Gallery subhead font size — harmonize with site-wide lede ──
-    'html body .gl-hd p{font-size:15px !important;line-height:1.55 !important;max-width:560px !important;margin-left:auto !important;margin-right:auto !important;}',
+    // ── C) Trim mobile top padding above "Talent is universal" ──
     '@media(max-width:640px){',
-    '  html body .gl-hd p{font-size:14px !important;line-height:1.5 !important;}',
+    '  html body .gl{padding-top:0 !important;}',
+    '  html body .gl .ctn{margin-top:0 !important;padding-top:0 !important;margin-bottom:16px !important;}',
+    '  html body .gl-hd{margin-top:0 !important;padding-top:0 !important;margin-bottom:12px !important;}',
+    '  html body .gl-hd h2{margin-top:0 !important;padding-top:0 !important;margin-bottom:10px !important;}',
+    '}',
+
+    // ── D) .gl-hd p — match .os-sub exactly (white bg, dark warm-gray text) ──
+    'html body .gl-hd p{',
+    '  font-family:"Inter",system-ui,sans-serif !important;',
+    '  font-size:15px !important;',
+    '  line-height:1.55 !important;',
+    '  color:#6E6A66 !important;',
+    '  max-width:560px !important;',
+    '  margin-left:auto !important;',
+    '  margin-right:auto !important;',
+    '  font-weight:400 !important;',
+    '}',
+    '@media(max-width:640px){',
+    '  html body .gl-hd p{font-size:13px !important;line-height:1.5 !important;}',
+    '}',
+
+    // ── E) Dashboard Preview h2 — break "institutional intelligence" onto line 2 on mobile ──
+    '@media(max-width:640px){',
+    '  html body .p3dp h2 .accent{display:block !important;}',
     '}'
   ].join('\n');
-  document.head.appendChild(v123css);
+  document.head.appendChild(v124css);
 
-  // Tag the dual-CTA cards' common parent so the grid CSS above can target it.
-  (function sideBysideDualCta(){
-    function apply(){
-      var section = document.querySelector('.p3-dual-cta');
-      if (!section) return;
-      // Prefer the students card; fall back to the first CTA card in the section.
-      var firstCard = section.querySelector('.p3-dual-card-students')
-                   || section.querySelector('.p3-cta-card');
-      if (!firstCard || !firstCard.parentElement) return;
-      var parent = firstCard.parentElement;
-      // Walk up until we find a parent that actually contains BOTH cards
-      // (sometimes Webflow wraps each card in its own column div).
-      var cards = section.querySelectorAll('.p3-cta-card, .p3-dual-card-students, .p3-dual-card-partners');
-      if (cards.length < 2) return;
-      // Compute common ancestor of the first two cards.
-      function ancestors(el){
+  // ── A) Dual CTA: force side-by-side via inline !important ──
+  // CSS classes lost to Webflow's compiled rules, so we set element.style
+  // with priority='important' — nothing in the cascade can beat this.
+  (function forceDualCtaGrid(){
+    function findCommonAncestor(section, cards) {
+      function ancestors(el) {
         var a = [];
         while (el) { a.push(el); el = el.parentElement; }
         return a;
       }
-      var aA = ancestors(cards[0]);
-      var aB = ancestors(cards[1]);
-      var setB = new Set(aB);
-      var common = aA.find(function(n){ return setB.has(n); });
-      if (common && common !== section && common !== document.body) {
-        common.classList.add('pp-dual-cta-grid');
+      // Intersect ancestor lists of all cards
+      var sets = Array.prototype.map.call(cards, function(c){ return new Set(ancestors(c)); });
+      var first = ancestors(cards[0]);
+      return first.find(function(n){
+        return n !== document.body && sets.every(function(s){ return s.has(n); });
+      }) || null;
+    }
+
+    function applyDesktop(common, cards) {
+      // Container becomes a 2-col grid
+      common.style.setProperty('display', 'grid', 'important');
+      common.style.setProperty('grid-template-columns', '1fr 1fr', 'important');
+      common.style.setProperty('flex-direction', 'row', 'important');
+      common.style.setProperty('gap', '24px', 'important');
+      common.style.setProperty('align-items', 'stretch', 'important');
+      common.style.setProperty('max-width', '1160px', 'important');
+      common.style.setProperty('margin-left', 'auto', 'important');
+      common.style.setProperty('margin-right', 'auto', 'important');
+      common.style.setProperty('width', '100%', 'important');
+      common.style.setProperty('grid-auto-flow', 'column', 'important');
+      common.style.setProperty('grid-auto-columns', '1fr', 'important');
+
+      // For each card, normalize its direct-child-of-common wrapper too
+      Array.prototype.forEach.call(cards, function(card){
+        var col = card;
+        while (col.parentElement && col.parentElement !== common) col = col.parentElement;
+        if (col !== card) {
+          col.style.setProperty('width', 'auto', 'important');
+          col.style.setProperty('max-width', '100%', 'important');
+          col.style.setProperty('min-width', '0', 'important');
+          col.style.setProperty('margin', '0', 'important');
+          col.style.setProperty('flex', '1 1 0', 'important');
+        }
+        card.style.setProperty('width', 'auto', 'important');
+        card.style.setProperty('max-width', '100%', 'important');
+        card.style.setProperty('min-width', '0', 'important');
+        card.style.setProperty('margin-top', '0', 'important');
+        card.style.setProperty('margin-bottom', '0', 'important');
+      });
+    }
+
+    function applyMobile(common, cards) {
+      common.style.setProperty('display', 'flex', 'important');
+      common.style.setProperty('flex-direction', 'column', 'important');
+      common.style.setProperty('grid-template-columns', 'none', 'important');
+      common.style.setProperty('gap', '20px', 'important');
+      common.style.setProperty('width', '100%', 'important');
+      Array.prototype.forEach.call(cards, function(card){
+        card.style.setProperty('width', 'auto', 'important');
+        card.style.setProperty('max-width', '100%', 'important');
+      });
+    }
+
+    function apply() {
+      var section = document.querySelector('.p3-dual-cta');
+      if (!section) return;
+      var cards = section.querySelectorAll('.p3-cta-card, .p3-dual-card-students, .p3-dual-card-partners');
+      if (cards.length < 2) return;
+      var common = findCommonAncestor(section, cards);
+      if (!common) common = cards[0].parentElement;
+      if (!common) return;
+
+      if (window.matchMedia('(min-width: 769px)').matches) {
+        applyDesktop(common, cards);
       } else {
-        // Fallback: tag immediate parent.
-        parent.classList.add('pp-dual-cta-grid');
+        applyMobile(common, cards);
       }
     }
+
     apply();
     setTimeout(apply, 300);
     setTimeout(apply, 1200);
+    setTimeout(apply, 3000);
     window.addEventListener('load', apply);
+    window.addEventListener('resize', apply);
   })();
 
 })();
