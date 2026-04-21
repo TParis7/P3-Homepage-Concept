@@ -133,24 +133,84 @@
     return didAny;
   }
 
-  /* hp-shared-sections builds the press grid post-load, so poll until we
-     either swap successfully or give up after ~6 s. */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* 3 · Split the "Institutional Intelligence · Last 12 Months" hero tag   */
+  /*      so only "Institutional Intelligence" can be hidden on mobile.     */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function splitHeroTag() {
+    var tag = document.querySelector('.p3dpv-hero-tag');
+    if (!tag || tag.getAttribute('data-hp-split') === '1') return false;
+
+    /* Find the first meaningful text node inside the tag (skips the .dot span) */
+    var textNode = null;
+    for (var i = 0; i < tag.childNodes.length; i++) {
+      var n = tag.childNodes[i];
+      if (n.nodeType === 3 /* TEXT_NODE */ && n.textContent.replace(/\s+/g, ' ').trim().length) {
+        textNode = n;
+        break;
+      }
+    }
+    if (!textNode) return false;
+
+    var full = textNode.textContent;
+    var dotIdx = full.indexOf('·');
+    if (dotIdx === -1) return false;
+
+    /* label = "Institutional Intelligence " (pre-dot, trimmed + trailing space) */
+    /* when  = "· Last 12 Months" (from the dot onward, collapsed) */
+    var label = full.substring(0, dotIdx).trim();
+    var when  = full.substring(dotIdx).replace(/\s+/g, ' ').trim();
+    if (!label || !when) return false;
+
+    var labelSpan = document.createElement('span');
+    labelSpan.className = 'p3dpv-hero-tag-label';
+    labelSpan.textContent = label + ' ';
+
+    var whenSpan = document.createElement('span');
+    whenSpan.className = 'p3dpv-hero-tag-when';
+    whenSpan.textContent = when;
+
+    /* Replace the raw text node with: " " + <label span> + <when span>       */
+    /* Leading space keeps the visual gap the original markup had after .dot.  */
+    textNode.parentNode.insertBefore(document.createTextNode(' '), textNode);
+    textNode.parentNode.insertBefore(labelSpan, textNode);
+    textNode.parentNode.insertBefore(whenSpan, textNode);
+    textNode.parentNode.removeChild(textNode);
+
+    tag.setAttribute('data-hp-split', '1');
+    return true;
+  }
+
+  /* Combined tick — succeeds only when BOTH transforms have stuck */
+  function applyAll() {
+    var a = swapLogos();
+    var b = splitHeroTag();
+    return a || b;
+  }
+  function allDone() {
+    var logosOK = document.querySelectorAll('.p3-press-card[data-hp-logo="1"]').length >= 6;
+    var tagOK = !!document.querySelector('.p3dpv-hero-tag[data-hp-split="1"]');
+    return logosOK && tagOK;
+  }
+
+  /* hp-shared-sections builds the press grid and dashboard preview post-load,
+     so poll until both transforms have settled or ~6 s have elapsed. */
   var tries = 0;
   var poll = setInterval(function () {
-    var ok = swapLogos();
-    if (ok || ++tries > 40) clearInterval(poll);
+    applyAll();
+    if (allDone() || ++tries > 40) clearInterval(poll);
   }, 150);
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', swapLogos);
+    document.addEventListener('DOMContentLoaded', applyAll);
   } else {
-    swapLogos();
+    applyAll();
   }
-  window.addEventListener('load', swapLogos);
+  window.addEventListener('load', applyAll);
 
-  /* Keep our swap sticky if the press grid ever gets re-rendered by Webflow */
+  /* Keep transforms sticky if Webflow ever re-renders either section */
   try {
-    var mo = new MutationObserver(function () { swapLogos(); });
+    var mo = new MutationObserver(function () { applyAll(); });
     mo.observe(document.body, { childList: true, subtree: true });
     /* Stop observing after 15 s — everything we care about has settled */
     setTimeout(function () { try { mo.disconnect(); } catch (e) {} }, 15000);
