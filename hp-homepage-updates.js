@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.2.0
+ * hp-homepage-updates.js        v1.2.1
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -30,7 +30,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.2.0';
+  var VERSION = '1.2.1';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
 
   /* Map the existing text-logo class (built by hp-shared-sections.js) →
@@ -52,6 +52,11 @@
   var STYLE_ID = 'p3-hp-updates-style';
   if (!document.getElementById(STYLE_ID)) {
     var css =
+      /* ── section headline accent (Making **Headlines** in crimson) ── */
+      '.p3-social-proof .p3-section-header h2 .accent {' +
+        'color:#D93A3A !important;' +
+      '}' +
+
       /* ── press CARD frame: white background, tighter padding ── */
       '.p3-social-proof .p3-press-card {' +
         'background:#ffffff !important;' +
@@ -88,15 +93,37 @@
         'max-height:78px !important;' +
       '}' +
 
-      /* ── 2-wide grid on mobile ── */
+      /* NYT ships as white-ink-on-transparent — brightness(0) flattens every
+         non-transparent pixel to solid black so it reads on the white card. */
+      '.p3-press-card .p3-pc-logo-nyt img {' +
+        'filter:brightness(0) !important;' +
+      '}' +
+
+      /* VERSUS is a black-card / white-text asset — give its card a dark
+         background so the original mark + tagline render correctly. All other
+         cards stay white. */
+      '.p3-social-proof .p3-press-card:has(.p3-pc-logo-versus) {' +
+        'background:#0a0f1c !important;' +
+        'border-color:#0a0f1c !important;' +
+      '}' +
+      '.p3-social-proof .p3-press-card:has(.p3-pc-logo-versus) .p3-pc-type {' +
+        'color:rgba(255,255,255,0.75) !important;' +
+      '}' +
+      '.p3-social-proof .p3-press-card:has(.p3-pc-logo-versus) .p3-pc-headline {' +
+        'color:#ffffff !important;' +
+      '}' +
+
+      /* ── 2-wide grid on mobile (uses higher-specificity selector so it wins
+             against hp-shared-sections' later-injected max-width:600px rule) ── */
       '@media (max-width:768px){' +
-        '.p3-press-grid {' +
+        '.p3-social-proof .p3-press-grid {' +
           'grid-template-columns:1fr 1fr !important;' +
           'gap:12px !important;' +
+          'max-width:520px !important;' +
         '}' +
-        '.p3-press-card .p3-pc-logo-img img {max-width:140px;max-height:50px;}' +
-        '.p3-press-card .p3-pc-logo-abc.p3-pc-logo-img img,' +
-        '.p3-press-card .p3-pc-logo-nyt.p3-pc-logo-img img {' +
+        '.p3-social-proof .p3-press-card .p3-pc-logo-img img {max-width:140px;max-height:50px;}' +
+        '.p3-social-proof .p3-press-card .p3-pc-logo-abc.p3-pc-logo-img img,' +
+        '.p3-social-proof .p3-press-card .p3-pc-logo-nyt.p3-pc-logo-img img {' +
           'max-width:160px !important;max-height:62px !important;' +
         '}' +
       '}' +
