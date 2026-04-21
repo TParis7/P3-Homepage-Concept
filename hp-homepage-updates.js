@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.2.1
+ * hp-homepage-updates.js        v1.2.2
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -21,6 +21,9 @@
  *   5. Hides the gallery headline ".gl-hd" ("Talent is universal. / Our data
  *      proves it. Hundreds of students… millions to go.") on desktop only;
  *      leaves it untouched on mobile.
+ *   6. Moves .p3-dual-cta out of .p3-social-proof at runtime so the section's
+ *      watermark background ends after the quote block and no longer bleeds
+ *      through behind the two CTA cards below.
  *
  * Repo:   tparis7/P3-Homepage-Concept
  * CDN:    https://tparis7.github.io/P3-Homepage-Concept/hp-homepage-updates.js
@@ -30,7 +33,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.2.1';
+  var VERSION = '1.2.2';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
 
   /* Map the existing text-logo class (built by hp-shared-sections.js) →
@@ -97,20 +100,6 @@
          non-transparent pixel to solid black so it reads on the white card. */
       '.p3-press-card .p3-pc-logo-nyt img {' +
         'filter:brightness(0) !important;' +
-      '}' +
-
-      /* VERSUS is a black-card / white-text asset — give its card a dark
-         background so the original mark + tagline render correctly. All other
-         cards stay white. */
-      '.p3-social-proof .p3-press-card:has(.p3-pc-logo-versus) {' +
-        'background:#0a0f1c !important;' +
-        'border-color:#0a0f1c !important;' +
-      '}' +
-      '.p3-social-proof .p3-press-card:has(.p3-pc-logo-versus) .p3-pc-type {' +
-        'color:rgba(255,255,255,0.75) !important;' +
-      '}' +
-      '.p3-social-proof .p3-press-card:has(.p3-pc-logo-versus) .p3-pc-headline {' +
-        'color:#ffffff !important;' +
       '}' +
 
       /* ── 2-wide grid on mobile (uses higher-specificity selector so it wins
@@ -278,19 +267,42 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */
+  /* 5 · Move .p3-dual-cta out of .p3-social-proof so the watermark           */
+  /*      background ends after the quote block and no longer bleeds          */
+  /*      through under the two CTA cards.                                    */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function liftDualCTA() {
+    var cta = document.querySelector('.p3-dual-cta');
+    if (!cta) return false;
+    if (cta.getAttribute('data-hp-lifted') === '1') return false;
+    var social = document.querySelector('.p3-social-proof');
+    if (!social) return false;
+    /* Already a sibling — mark done so we stop polling */
+    if (cta.parentElement !== social) {
+      cta.setAttribute('data-hp-lifted', '1');
+      return true;
+    }
+    social.parentNode.insertBefore(cta, social.nextSibling);
+    cta.setAttribute('data-hp-lifted', '1');
+    return true;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
   /* Runner — apply all transforms on a poll+observer loop                   */
   /* ─────────────────────────────────────────────────────────────────────── */
   function applyAll() {
     var a = swapLogos();
     var b = swapHeadline();
     var c = splitHeroTag();
-    return a || b || c;
+    var d = liftDualCTA();
+    return a || b || c || d;
   }
   function allDone() {
     var logosOK    = document.querySelectorAll('.p3-press-card[data-hp-logo="1"]').length >= 6;
     var headlineOK = !!document.querySelector('.p3-social-proof .p3-section-header h2[data-hp-headline="1"]');
     var tagOK      = !!document.querySelector('.p3dpv-hero-tag[data-hp-split="1"]');
-    return logosOK && headlineOK && tagOK;
+    var ctaOK      = !!document.querySelector('.p3-dual-cta[data-hp-lifted="1"]');
+    return logosOK && headlineOK && tagOK && ctaOK;
   }
 
   /* hp-shared-sections builds the press grid and dashboard preview post-load,
