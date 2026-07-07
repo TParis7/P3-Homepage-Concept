@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.2.2
+ * hp-homepage-updates.js        v1.3.0
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -24,6 +24,16 @@
  *   6. Moves .p3-dual-cta out of .p3-social-proof at runtime so the section's
  *      watermark background ends after the quote block and no longer bleeds
  *      through behind the two CTA cards below.
+ *   7. Hero devices (desktop ≥992px only) — swaps the iPhone-pair mockup for
+ *      the MacBook+iPhone web-app mockup (hero-devices.webp, transparent bg,
+ *      space-black devices) with the /platform-style perspective tilt that
+ *      straightens on hover + a deep drop shadow. Mobile keeps the original
+ *      phones image untouched.
+ *   8. Hero primary CTA — "Download Free App" → "Get Started", linking to
+ *      /platform (the web-app landing page).
+ *   9. Medium-screen hero trim (992–1728px) — reduces the hero's min-height
+ *      and the grid's vertical padding so the headline sits higher on
+ *      laptop-class viewports.
  *
  * Repo:   tparis7/P3-Homepage-Concept
  * CDN:    https://tparis7.github.io/P3-Homepage-Concept/hp-homepage-updates.js
@@ -33,8 +43,11 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.2.2';
+  var VERSION = '1.3.0';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
+  /* MacBook+iPhone hero mockup (transparent webp, served from the
+     Platform-Page repo alongside the /platform landing assets) */
+  var HERO_DEVICES = 'https://tparis7.github.io/Platform-Page/images/hero-devices.webp';
 
   /* Map the existing text-logo class (built by hp-shared-sections.js) →
      image file + alt text + (optional) override of the "type" label shown
@@ -142,6 +155,29 @@
       /* ── desktop-only hide for gallery "Talent is universal…" header ── */
       '@media (min-width:769px){' +
         '.gl-hd {display:none !important;}' +
+      '}' +
+
+      /* ── hero devices (desktop only): wide MacBook+iPhone mockup with the
+             /platform-hero perspective tilt that straightens on hover ── */
+      '@media (min-width:992px){' +
+        '.p3-hero-devices {' +
+          'width:135% !important;' +
+          'max-width:none !important;' +
+          'margin-left:-10%;' +
+          'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
+          'transition:transform .8s cubic-bezier(.2,.8,.2,1);' +
+          'filter:drop-shadow(0 40px 80px rgba(0,0,0,.55));' +
+          'will-change:transform;' +
+        '}' +
+        '.p3-hero-devices:hover {' +
+          'transform:perspective(1400px) rotateY(-1deg) rotateX(0deg);' +
+        '}' +
+      '}' +
+
+      /* ── medium-screen hero trim: lift the headline on laptop viewports ── */
+      '@media (min-width:992px) and (max-width:1728px){' +
+        '.p3-hero {min-height:92vh !important;padding-top:100px !important;}' +
+        '.p3-hero-grid {padding-top:48px !important;padding-bottom:48px !important;}' +
       '}';
 
     var style = document.createElement('style');
@@ -288,6 +324,39 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */
+  /* 7 · Hero devices — desktop-only swap of the iPhone pair for the         */
+  /*      MacBook+iPhone web-app mockup. Mobile keeps the original image.    */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function swapHeroDevices() {
+    /* Decided once at load: phones stay on small screens */
+    if (window.innerWidth < 992) return true;
+    var img = document.querySelector('.p3-hero-iphone');
+    if (!img) return false;
+    if (img.getAttribute('data-hp-devices') === '1') return true;
+    /* srcset would override a plain src swap — drop the responsive set */
+    img.removeAttribute('srcset');
+    img.removeAttribute('sizes');
+    img.src = HERO_DEVICES;
+    img.alt = 'The P3 platform on a MacBook and iPhone — web dashboard and mobile app';
+    img.classList.add('p3-hero-devices');
+    img.setAttribute('data-hp-devices', '1');
+    return true;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* 8 · Hero CTA — "Download Free App" → "Get Started" → /platform          */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function swapHeroCta() {
+    var btn = document.querySelector('.p3-hero-buttons a.p3-btn-primary');
+    if (!btn) return false;
+    if (btn.getAttribute('data-hp-cta') === '1') return true;
+    btn.textContent = 'Get Started';
+    btn.setAttribute('href', '/platform');
+    btn.setAttribute('data-hp-cta', '1');
+    return true;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
   /* Runner — apply all transforms on a poll+observer loop                   */
   /* ─────────────────────────────────────────────────────────────────────── */
   function applyAll() {
@@ -295,14 +364,18 @@
     var b = swapHeadline();
     var c = splitHeroTag();
     var d = liftDualCTA();
-    return a || b || c || d;
+    var e = swapHeroDevices();
+    var f = swapHeroCta();
+    return a || b || c || d || e || f;
   }
   function allDone() {
     var logosOK    = document.querySelectorAll('.p3-press-card[data-hp-logo="1"]').length >= 6;
     var headlineOK = !!document.querySelector('.p3-social-proof .p3-section-header h2[data-hp-headline="1"]');
     var tagOK      = !!document.querySelector('.p3dpv-hero-tag[data-hp-split="1"]');
     var ctaOK      = !!document.querySelector('.p3-dual-cta[data-hp-lifted="1"]');
-    return logosOK && headlineOK && tagOK && ctaOK;
+    var devicesOK  = window.innerWidth < 992 || !!document.querySelector('.p3-hero-iphone[data-hp-devices="1"]');
+    var heroCtaOK  = !!document.querySelector('.p3-hero-buttons a.p3-btn-primary[data-hp-cta="1"]');
+    return logosOK && headlineOK && tagOK && ctaOK && devicesOK && heroCtaOK;
   }
 
   /* hp-shared-sections builds the press grid and dashboard preview post-load,
