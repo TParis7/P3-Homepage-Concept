@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.4.2
+ * hp-homepage-updates.js        v1.4.5
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -43,7 +43,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.4.2';
+  var VERSION = '1.4.5';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
   /* MacBook+iPhone hero mockup (transparent webp, served from the
      Platform-Page repo alongside the /platform landing assets) */
@@ -166,19 +166,28 @@
           'width:142% !important;' +
           'max-width:none !important;' +
           'margin-left:-4%;' +
-          'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
+          'transform:translateX(var(--hp-shift, 0px)) perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
           'transition:transform .8s cubic-bezier(.2,.8,.2,1), opacity .4s ease;' +
           'filter:drop-shadow(0 40px 80px rgba(0,0,0,.55));' +
           'will-change:transform;' +
         '}' +
         '.p3-hero-devices:hover {' +
-          'transform:perspective(1400px) rotateY(-1deg) rotateX(0deg);' +
+          'transform:translateX(var(--hp-shift, 0px)) perspective(1400px) rotateY(-1deg) rotateX(0deg);' +
         '}' +
         /* Load-flash gate: the head pre-hide snippet keeps the hero image
            invisible until the swapped mockup has actually LOADED (JS sets
            data-hp-ready below); this rule fades it in. */
         '.p3-hero-iphone[data-hp-ready="1"] {opacity:1 !important;animation:none !important;}' +
         '.p3-hero-buttons a.p3-btn-primary[data-hp-cta="1"] {opacity:1 !important;animation:none !important;}' +
+      '}' +
+
+      /* ── wide screens: scale the devices with the monitor. The exact
+             right-edge alignment is computed in JS (positionHeroDevices)
+             and applied via --hp-shift so the hover transition survives. ── */
+      '@media (min-width:1730px){' +
+        '.p3-hero-devices {' +
+          'width:49vw !important;' +
+        '}' +
       '}' +
 
       /* ── medium-screen hero trim: lift the headline on laptop viewports ── */
@@ -349,7 +358,10 @@
     img.setAttribute('data-hp-devices', '1');
     /* Reveal only once the mockup has loaded (kills the old-image flash the
        head pre-hide snippet is holding back); 3s failsafe regardless. */
-    function markReady() { img.setAttribute('data-hp-ready', '1'); }
+    function markReady() {
+      img.setAttribute('data-hp-ready', '1');
+      positionHeroDevices();
+    }
     if (img.complete && img.naturalWidth > 0) markReady();
     else {
       img.addEventListener('load', markReady, { once: true });
@@ -358,6 +370,33 @@
     setTimeout(markReady, 3000);
     return true;
   }
+
+  /* On wide screens (≥1730px) slide the devices right until their edge sits
+     24px from the viewport edge. Measured at runtime (the hero layout is
+     fluid, so static CSS math can't target the viewport reliably) and applied
+     via the --hp-shift custom property the transform rules consume.
+     translateX moves the rendered box linearly, so one measured delta is
+     exact — but a mid-flight 0.8s transform transition skews the read, so
+     resize schedules a settle re-check after the transition ends. */
+  function positionHeroDevices() {
+    var img = document.querySelector('.p3-hero-devices');
+    if (!img) return;
+    if (window.innerWidth < 1730) {
+      img.style.removeProperty('--hp-shift');
+      return;
+    }
+    var current = parseFloat(getComputedStyle(img).getPropertyValue('--hp-shift')) || 0;
+    var delta = (window.innerWidth - 24) - img.getBoundingClientRect().right;
+    if (Math.abs(delta) > 1) img.style.setProperty('--hp-shift', (current + delta) + 'px');
+  }
+  var hpResizeTimer = null;
+  var hpSettleTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(hpResizeTimer);
+    clearTimeout(hpSettleTimer);
+    hpResizeTimer = setTimeout(positionHeroDevices, 150);
+    hpSettleTimer = setTimeout(positionHeroDevices, 1100);
+  });
 
   /* ─────────────────────────────────────────────────────────────────────── */
   /* 8 · Hero CTA — "Download Free App" → "Get Started" → /platform          */
