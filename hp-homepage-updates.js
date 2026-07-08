@@ -1,6 +1,9 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.4.6
+ * hp-homepage-updates.js        v1.4.7
  * ---------------------------------------------------------------------------
+ * v1.4.7 — right-edge pin (positionHeroDevices) now runs at ALL desktop widths
+ * (≥992px, was ≥1730px) and the laptop-range width is 132% (was 142%): with the
+ * clamp below actually defeated, 142% collided with the headline on laptops.
  * v1.4.6 — hero-devices sizing rules upgraded to img.p3-hero-iphone.p3-hero-devices
  * (specificity 0,2,1). The registered Webflow script p3layoutstyles-1.2.0 injects
  * `.p3-hero-iphone{width:380px!important;max-width:380px!important}` and its
@@ -174,7 +177,11 @@
          ours — with equal specificity its 380px clamp wins on the live page. */
       '@media (min-width:992px){' +
         'img.p3-hero-iphone.p3-hero-devices {' +
-          'width:142% !important;' +
+          /* 132% (not 142%): with the p3layoutstyles 380px clamp gone the true
+             size finally renders, and at 142% the longest headline line ran
+             ~70px behind the MacBook on 1280–1729px viewports. 132% + the JS
+             right-edge pin clears it by ~30px at every laptop width. */
+          'width:132% !important;' +
           'max-width:none !important;' +
           'margin-left:-4%;' +
           'transform:translateX(var(--hp-shift, 0px)) perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
@@ -383,7 +390,7 @@
     return true;
   }
 
-  /* On wide screens (≥1730px) slide the devices right until their edge sits
+  /* On desktop (≥992px) slide the devices right until their edge sits
      24px from the viewport edge. Measured at runtime (the hero layout is
      fluid, so static CSS math can't target the viewport reliably) and applied
      via the --hp-shift custom property the transform rules consume.
@@ -393,7 +400,7 @@
   function positionHeroDevices() {
     var img = document.querySelector('.p3-hero-devices');
     if (!img) return;
-    if (window.innerWidth < 1730) {
+    if (window.innerWidth < 992) {
       img.style.removeProperty('--hp-shift');
       return;
     }
