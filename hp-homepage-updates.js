@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.3.0
+ * hp-homepage-updates.js        v1.4.0
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -43,7 +43,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.3.0';
+  var VERSION = '1.4.0';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
   /* MacBook+iPhone hero mockup (transparent webp, served from the
      Platform-Page repo alongside the /platform landing assets) */
@@ -158,20 +158,28 @@
       '}' +
 
       /* ── hero devices (desktop only): wide MacBook+iPhone mockup with the
-             /platform-hero perspective tilt that straightens on hover ── */
+             /platform-hero perspective tilt that straightens on hover.
+             scale() grows the visual without affecting grid layout (matches
+             the /platform hero's visual weight). ── */
       '@media (min-width:992px){' +
         '.p3-hero-devices {' +
           'width:135% !important;' +
           'max-width:none !important;' +
           'margin-left:-10%;' +
-          'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
-          'transition:transform .8s cubic-bezier(.2,.8,.2,1);' +
+          'transform-origin:60% 50%;' +
+          'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg) scale(1.3);' +
+          'transition:transform .8s cubic-bezier(.2,.8,.2,1), opacity .4s ease;' +
           'filter:drop-shadow(0 40px 80px rgba(0,0,0,.55));' +
           'will-change:transform;' +
         '}' +
         '.p3-hero-devices:hover {' +
-          'transform:perspective(1400px) rotateY(-1deg) rotateX(0deg);' +
+          'transform:perspective(1400px) rotateY(-1deg) rotateX(0deg) scale(1.3);' +
         '}' +
+        /* Load-flash gate: the head pre-hide snippet keeps the hero image
+           invisible until the swapped mockup has actually LOADED (JS sets
+           data-hp-ready below); this rule fades it in. */
+        '.p3-hero-iphone[data-hp-ready="1"] {opacity:1 !important;animation:none !important;}' +
+        '.p3-hero-buttons a.p3-btn-primary[data-hp-cta="1"] {opacity:1 !important;animation:none !important;}' +
       '}' +
 
       /* ── medium-screen hero trim: lift the headline on laptop viewports ── */
@@ -340,6 +348,15 @@
     img.alt = 'The P3 platform on a MacBook and iPhone — web dashboard and mobile app';
     img.classList.add('p3-hero-devices');
     img.setAttribute('data-hp-devices', '1');
+    /* Reveal only once the mockup has loaded (kills the old-image flash the
+       head pre-hide snippet is holding back); 3s failsafe regardless. */
+    function markReady() { img.setAttribute('data-hp-ready', '1'); }
+    if (img.complete && img.naturalWidth > 0) markReady();
+    else {
+      img.addEventListener('load', markReady, { once: true });
+      img.addEventListener('error', markReady, { once: true });
+    }
+    setTimeout(markReady, 3000);
     return true;
   }
 
