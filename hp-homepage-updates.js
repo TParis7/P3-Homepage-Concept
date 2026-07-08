@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.4.0
+ * hp-homepage-updates.js        v1.4.1
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -43,7 +43,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.4.0';
+  var VERSION = '1.4.1';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
   /* MacBook+iPhone hero mockup (transparent webp, served from the
      Platform-Page repo alongside the /platform landing assets) */
@@ -163,17 +163,16 @@
              the /platform hero's visual weight). ── */
       '@media (min-width:992px){' +
         '.p3-hero-devices {' +
-          'width:135% !important;' +
+          'width:138% !important;' +
           'max-width:none !important;' +
-          'margin-left:-10%;' +
-          'transform-origin:60% 50%;' +
-          'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg) scale(1.3);' +
+          'margin-left:-2%;' +
+          'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
           'transition:transform .8s cubic-bezier(.2,.8,.2,1), opacity .4s ease;' +
           'filter:drop-shadow(0 40px 80px rgba(0,0,0,.55));' +
           'will-change:transform;' +
         '}' +
         '.p3-hero-devices:hover {' +
-          'transform:perspective(1400px) rotateY(-1deg) rotateX(0deg) scale(1.3);' +
+          'transform:perspective(1400px) rotateY(-1deg) rotateX(0deg);' +
         '}' +
         /* Load-flash gate: the head pre-hide snippet keeps the hero image
            invisible until the swapped mockup has actually LOADED (JS sets
