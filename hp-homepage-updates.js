@@ -1,5 +1,5 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.4.1
+ * hp-homepage-updates.js        v1.4.2
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -43,7 +43,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.4.1';
+  var VERSION = '1.4.2';
   var LOGO_BASE = 'https://tparis7.github.io/P3-Homepage-Concept/press-logos/';
   /* MacBook+iPhone hero mockup (transparent webp, served from the
      Platform-Page repo alongside the /platform landing assets) */
@@ -163,9 +163,9 @@
              the /platform hero's visual weight). ── */
       '@media (min-width:992px){' +
         '.p3-hero-devices {' +
-          'width:138% !important;' +
+          'width:142% !important;' +
           'max-width:none !important;' +
-          'margin-left:-2%;' +
+          'margin-left:-4%;' +
           'transform:perspective(1400px) rotateY(-5deg) rotateX(1.5deg);' +
           'transition:transform .8s cubic-bezier(.2,.8,.2,1), opacity .4s ease;' +
           'filter:drop-shadow(0 40px 80px rgba(0,0,0,.55));' +
