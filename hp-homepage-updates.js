@@ -1,5 +1,12 @@
 /* ===========================================================================
- * hp-homepage-updates.js        v1.4.5
+ * hp-homepage-updates.js        v1.4.6
+ * ---------------------------------------------------------------------------
+ * v1.4.6 — hero-devices sizing rules upgraded to img.p3-hero-iphone.p3-hero-devices
+ * (specificity 0,2,1). The registered Webflow script p3layoutstyles-1.2.0 injects
+ * `.p3-hero-iphone{width:380px!important;max-width:380px!important}` and its
+ * <style> lands AFTER ours in the DOM — equal specificity meant its 380px clamp
+ * silently won on the live page (while injected-CSS tests, appended last, looked
+ * correct). Higher specificity makes the winner order-independent.
  * ---------------------------------------------------------------------------
  * Additive patch layered on top of hp-shared-sections.js for the P3 homepage.
  *
@@ -161,8 +168,12 @@
              /platform-hero perspective tilt that straightens on hover.
              scale() grows the visual without affecting grid layout (matches
              the /platform hero's visual weight). ── */
+      /* Selector note: img.p3-hero-iphone.p3-hero-devices (0,2,1) must outrank
+         p3layoutstyles-1.2.0's `.p3-hero-iphone{width:380px!important;
+         max-width:380px!important}` (0,1,0) whose <style> is injected after
+         ours — with equal specificity its 380px clamp wins on the live page. */
       '@media (min-width:992px){' +
-        '.p3-hero-devices {' +
+        'img.p3-hero-iphone.p3-hero-devices {' +
           'width:142% !important;' +
           'max-width:none !important;' +
           'margin-left:-4%;' +
@@ -171,7 +182,7 @@
           'filter:drop-shadow(0 40px 80px rgba(0,0,0,.55));' +
           'will-change:transform;' +
         '}' +
-        '.p3-hero-devices:hover {' +
+        'img.p3-hero-iphone.p3-hero-devices:hover {' +
           'transform:translateX(var(--hp-shift, 0px)) perspective(1400px) rotateY(-1deg) rotateX(0deg);' +
         '}' +
         /* Load-flash gate: the head pre-hide snippet keeps the hero image
@@ -185,8 +196,9 @@
              right-edge alignment is computed in JS (positionHeroDevices)
              and applied via --hp-shift so the hover transition survives. ── */
       '@media (min-width:1730px){' +
-        '.p3-hero-devices {' +
+        'img.p3-hero-iphone.p3-hero-devices {' +
           'width:49vw !important;' +
+          'max-width:none !important;' +
         '}' +
       '}' +
 
