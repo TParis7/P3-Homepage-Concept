@@ -285,8 +285,7 @@
     '<div class="roi-ft-bottom">' +
       '<div class="roi-ft-copy">&copy; 2026 Pulse of Perseverance Project. All rights reserved.</div>' +
       '<div class="roi-ft-links">' +
-        '<a href="/app-privacy-policy">Privacy Policy</a>' +
-        '<a href="/app-terms-conditions">Terms &amp; Conditions</a>' +
+        '<a href="https://www.pulseofp3.org/app-terms-conditions">Terms &amp; Policies</a>' +
       '</div>' +
     '</div>' +
   '</div>';
